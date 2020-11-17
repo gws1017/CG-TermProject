@@ -8,10 +8,12 @@ uniform vec3 in_Color;
 
 layout (location = 0)in vec3 in_Position;
 layout (location = 1)in vec3 vNormal;
+layout (loacation = 2)in vec2 in_uv;
 
 out vec3 ex_Color;
 out vec3 FragPos;
 out vec3 Normal;
+out vec2 uv;
 
 
 
@@ -21,4 +23,5 @@ void main()
 	ex_Color = in_Color;
 	FragPos = vec3(modelTransform*vec4(in_Position,1.0));
 	Normal = vNormal;
+	uv = in_uv;
 }
