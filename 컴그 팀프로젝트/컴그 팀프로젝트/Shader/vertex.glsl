@@ -8,7 +8,7 @@ uniform vec3 in_Color;
 
 layout (location = 0)in vec3 in_Position;
 layout (location = 1)in vec3 vNormal;
-layout (loacation = 2)in vec2 in_uv;
+layout (location = 2)in vec2 in_uv;
 
 out vec3 ex_Color;
 out vec3 FragPos;

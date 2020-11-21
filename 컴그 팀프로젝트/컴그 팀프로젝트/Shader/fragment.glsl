@@ -31,5 +31,5 @@ void main()
     vec3 result = (ambient + diffuse + specular) * ex_Color; //--- 최종 조명 설정된 픽셀 색상: (주변+산란반사+거울반사조명)*객체 색상
 
     gl_FragColor = vec4(result,1.0);
-	gl_FragColor = texture(outTexture,uv) * glFragColor;
+	gl_FragColor = texture(outTexture,uv) * gl_FragColor;
 }
