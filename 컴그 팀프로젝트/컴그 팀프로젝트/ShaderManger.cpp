@@ -25,7 +25,7 @@ char* filetobuf(const char* file)
 
 	return buf;
 
-}
+} 
 
 void make_vertexShader()
 {
