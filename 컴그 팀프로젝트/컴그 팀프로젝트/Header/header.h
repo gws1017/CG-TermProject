@@ -9,9 +9,7 @@
 #include <windows.h>
 
 //외부헤더
-#include "ReadObj.h"
-#include "stb_image.h"
-#include "ShaderManager.h"
+
 
 //opengl 헤더
 //양원석용

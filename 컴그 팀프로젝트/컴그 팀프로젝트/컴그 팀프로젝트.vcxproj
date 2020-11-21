@@ -142,12 +142,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Header\Bottom.h" />
     <ClInclude Include="Header\header.h" />
+    <ClInclude Include="Header\Init.h" />
     <ClInclude Include="Header\ReadObj.h" />
     <ClInclude Include="Header\ShaderManager.h" />
     <ClInclude Include="Header\stb_image.h" />
+    <ClInclude Include="Init.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Bottom.cpp" />
+    <ClCompile Include="Init.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ShaderManger.cpp" />
   </ItemGroup>

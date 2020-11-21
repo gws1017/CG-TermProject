@@ -4,6 +4,7 @@ uniform vec3 viewPos;        //카메라의 EYE
 uniform vec3 lightPos;
 uniform vec3 lightColor;
 uniform vec3 ambientOnOff;
+
 uniform sampler2D outTexture;
 in vec3 ex_Color;
 in vec3 FragPos;
@@ -30,6 +31,7 @@ void main()
     vec3 specular = specularLight *  lightColor; //--- 거울 반사 조명값: 거울반사값 * 조명색상값
     vec3 result = (ambient + diffuse + specular) * ex_Color; //--- 최종 조명 설정된 픽셀 색상: (주변+산란반사+거울반사조명)*객체 색상
 
-    gl_FragColor = vec4(result,1.0);
+    //gl_FragColor = vec4(result,1.0);
+    gl_FragColor = vec4(ex_Color,1.0);
 	gl_FragColor = texture(outTexture,uv) * gl_FragColor;
 }
