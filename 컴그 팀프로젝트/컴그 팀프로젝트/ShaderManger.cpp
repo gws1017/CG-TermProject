@@ -1,6 +1,6 @@
 #include "Header/ShaderManager.h"
 
- //opengl 기본변수
+//opengl 기본변수
 extern GLuint s_program;
 extern GLuint shaderID;
 extern GLchar* vertexsource, * fragmentsource;
@@ -29,7 +29,7 @@ char* filetobuf(const char* file)
 
 void make_vertexShader()
 {
-	vertexsource = filetobuf("vertex.glsl");
+	vertexsource = filetobuf("Shader/vertex.glsl");
 	vertexshader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexshader, 1, (const GLchar**)&vertexsource, 0);
 	glCompileShader(vertexshader);
@@ -47,7 +47,7 @@ void make_vertexShader()
 
 void make_fragmentShader()
 {
-	fragmentsource = filetobuf("fragment.glsl");
+	fragmentsource = filetobuf("Shader/fragment.glsl");
 	fragmentshader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentshader, 1, (const GLchar**)&fragmentsource, NULL);
 	glCompileShader(fragmentshader);

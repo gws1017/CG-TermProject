@@ -10,7 +10,7 @@ GLvoid Reshape(int w, int h);
 //opengl 기본변수
 GLuint s_program;
 GLuint shaderID;
-GLchar* vertexsource, * fragmentsource;
+GLchar* vertexsource, *fragmentsource;
 GLuint vertexshader, fragmentshader;
 
 
