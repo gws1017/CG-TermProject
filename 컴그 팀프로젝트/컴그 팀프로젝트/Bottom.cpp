@@ -8,10 +8,11 @@ void Bottom::Init(const GLuint s_program)
 
 void Bottom::Draw()
 {
+	
 	glBindVertexArray(vao);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	//glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(R * S1));
+	
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
 }
 

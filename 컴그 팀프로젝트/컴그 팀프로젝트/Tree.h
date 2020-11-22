@@ -1,9 +1,7 @@
-#pragma once
-#include "Init.h"
-
-class Bottom {
-
-	GLuint vao, vbo[3],ebo;
+#include "Header/Init.h"
+class Tree
+{
+	GLuint vao, vbo[3], ebo;
 
 	float* vPosData;
 	float* vNormalData;
@@ -14,7 +12,7 @@ class Bottom {
 
 	int width, height, nrChannels;
 	unsigned int texture;
-	
+	//glm::mat4 R
 
 public:
 
