@@ -148,13 +148,18 @@
     <ClInclude Include="Header\ReadObj.h" />
     <ClInclude Include="Header\ShaderManager.h" />
     <ClInclude Include="Header\stb_image.h" />
-    <ClInclude Include="Init.h" />
+    <ClInclude Include="Pot.h" />
+    <ClInclude Include="Tree1.h" />
+    <ClInclude Include="Tree2.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bottom.cpp" />
     <ClCompile Include="Init.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Pot.cpp" />
     <ClCompile Include="ShaderManger.cpp" />
+    <ClCompile Include="Tree1.cpp" />
+    <ClCompile Include="Tree2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\fragment.glsl" />
