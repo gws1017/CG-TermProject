@@ -1,13 +1,14 @@
 #include "Header/ShaderManager.h"
 #include "Header/Bottom.h"
-#include "Tree1.h"
-#include "Tree2.h"
-#include "Pot.h"
+#include "Header/Tree1.h"
+#include "Header/Tree2.h"
+#include "Header/Pot.h"
+#include "Header/KeyBoard.h"
+#include "Header/Pokemon.h"
 
 //opengl 쉐이더및 콜백함수
 GLvoid drawScene(GLvoid);
 GLvoid Reshape(int w, int h);
-void Keyboard(unsigned char key, int x, int y);
 void Timerfunction(int value);
 void MouseInput(int button, int state, int x, int y);
 
@@ -29,8 +30,8 @@ unsigned int lightColorLocation;
 
 //카메라 변수
 float CamPosX = 0.0f;
-float CamPosY = 5.0f;
-float CamPosZ = 40.0f;
+float CamPosY = 1.5f;
+float CamPosZ = 5.0f;
 
 float CamXAt = 0.0f;
 float CamYAt = 0.0f;
@@ -39,6 +40,11 @@ float CamZAt = 0.0f;
 float cam_rotate = 0.0;
 float cam_revolve = 0.0;
 
+//타이머 변수
+bool fruitTimer = false;
+bool treeTimer = false;
+bool potswingTimer = false;
+
 //열매
 void make_fruitpos();
 
@@ -46,8 +52,7 @@ GLUquadricObj* qobj;
 int fruit_xpos[20] = { 0, };
 float fruit_ypos[20] = { 0.0f, };
 int fruit_zpos[20] = { 0, };
-bool fruitTimer = false;
-bool treeTimer = false;
+
 float treeVec = 0.5f;
 
 float treeAngle = 0.0f;
@@ -64,13 +69,15 @@ Tree1 t1;
 Tree2 t2;
 Pot p;
 
+Pokemon pt("picachu");
+
 void main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowPosition(100, 100);
 	glutInitWindowSize(WIDTH, HEIGHT);
-	glutCreateWindow("Example1");
+	glutCreateWindow("PokeMonSimulator");
 
 	glewExperimental = GL_TRUE;
 	glewInit();
@@ -78,11 +85,13 @@ void main(int argc, char** argv)
 	glUseProgram(s_program);
 
 	InitShader();
+
 	//클래스 초기화------------------
 	b.Init(s_program);
 	t1.Init(s_program);
 	t2.Init(s_program);
 	p.Init(s_program);
+	pt.Init(s_program);
 	//-------------------
 
 	//-----사용자 함수--------
@@ -113,6 +122,7 @@ void main(int argc, char** argv)
 
 GLvoid drawScene()
 {
+	
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	qobj = gluNewQuadric();
@@ -243,59 +253,22 @@ GLvoid drawScene()
 	}
 	//--------------------------------------------------
 
-
+	pt.Draw(modelLocation);
 
 	//------------------------------------------------솥
-	glUniform1i(flagLocation, 1);
+	glUniform1i(flagLocation, 0);
 	p.Draw(modelLocation,vColorLocation);
-
-
+	
+	
 	glutSwapBuffers();
 }
 
-void Keyboard(unsigned char key, int x, int y)
-{
-    switch (key)
-    {
-	case'm' :
-		treeTimer = !treeTimer;
-		fruitTimer = !fruitTimer;
-		treeAngle = 0.0f;
-		break;
-	case 'c':
-		CamYAt += 0.5;
-		CamPosY += 0.5;
-		break;
-	case 'C':
-		CamYAt -= 0.5;
-		CamPosY -= 0.5;
-		break;
-    case 'z':
-        CamZAt += 0.5;
-        CamPosZ += 0.5;
-        break;
-    case 'Z':
-        CamZAt -= 0.5;
-        CamPosZ -= 0.5;
-        break;
-    case 'y':
-        cam_rotate += 10.0;
-        break;
-    case 'Y':
-        cam_rotate -= 10.0;
-        break;
-    case 'r':
-        cam_revolve += 10.0;
-        break;
-    case 'R':
-        cam_revolve -= 10.0;
-        break;
-    }
-	glutPostRedisplay();
-}
+
 
 void Timerfunction(int value)
 {
+	if (potswingTimer) p.Swing();
+
 	if (treeTimer)
 	{
 		treeAngle += treeVec;
@@ -304,6 +277,7 @@ void Timerfunction(int value)
 		if (treeAngle < -5.0)
 			treeVec *= -1;
 	}
+
 	if (fruitTimer)
 	{
 		for (int i = 0; i < 20; ++i)
@@ -317,7 +291,7 @@ void Timerfunction(int value)
 	}
 
 	
-	glutTimerFunc(100, Timerfunction, 1);
+	glutTimerFunc(10, Timerfunction, 1);
 	glutPostRedisplay();
 }
 

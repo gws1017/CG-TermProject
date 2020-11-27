@@ -8,11 +8,11 @@
 #include <time.h>
 #include <windows.h>
 
+using namespace std;
 //외부헤더
 
 
 //opengl 헤더
-//양원석용
 #include <gl/glew.h>
 #include <gl/freeglut.h>
 #include <gl/freeglut_ext.h>
@@ -20,16 +20,6 @@
 #include <glm/ext.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-//박해성 Desktop
-//
-//#include <gl/glew.h>
-//#include <gl/freeglut.h>
-//#include <gl/freeglut_ext.h>
-//#include <glm/glm.hpp>
-//#include <glm/ext.hpp>
-//#include <glm/gtc/matrix_transform.hpp>
-//#include <glm/gtc/type_ptr.hpp>
-//-------------------------
 
 //정의
 
