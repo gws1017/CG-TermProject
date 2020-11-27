@@ -14,6 +14,7 @@ class Tree1
 	int width, height, nrChannels;
 	unsigned int texture;
 
+	//변환 행렬
 public:
 
 	void Init(const GLuint s_program);

@@ -6,6 +6,9 @@ uniform vec3 lightColor;
 uniform vec3 ambientOnOff;
 
 uniform sampler2D outTexture;
+
+uniform int flag;
+
 in vec3 ex_Color;
 in vec3 FragPos;
 in vec3 Normal;
@@ -34,4 +37,5 @@ void main()
     //gl_FragColor = vec4(result,1.0);
     //gl_FragColor = vec4(ex_Color,1.0);
 	gl_FragColor = texture(outTexture,uv);   //* gl_FragColor;
+    if(flag == 1 ) gl_FragColor  = vec4(ex_Color,1.0); //색상만 넣는 경우
 }

@@ -1,10 +1,10 @@
 #include "Header/ShaderManager.h"
 #include "Header/Bottom.h"
-#include"Tree1.h"
-#include"Tree2.h"
-#include"Pot.h"
-//opengl 쉐이더및 콜백함수
+#include "Tree1.h"
+#include "Tree2.h"
+#include "Pot.h"
 
+//opengl 쉐이더및 콜백함수
 GLvoid drawScene(GLvoid);
 GLvoid Reshape(int w, int h);
 void Keyboard(unsigned char key, int x, int y);
@@ -18,6 +18,7 @@ GLchar* vertexsource, *fragmentsource;
 GLuint vertexshader, fragmentshader;
 
 //로케이션 변수
+unsigned int flagLocation;
 unsigned int vColorLocation;
 unsigned int projectionLocation;
 unsigned int modelLocation;
@@ -28,8 +29,8 @@ unsigned int lightColorLocation;
 
 //카메라 변수
 float CamPosX = 0.0f;
-float CamPosY = 1.0f;
-float CamPosZ = 5.0f;
+float CamPosY = 5.0f;
+float CamPosZ = 40.0f;
 
 float CamXAt = 0.0f;
 float CamYAt = 0.0f;
@@ -52,11 +53,6 @@ float treeVec = 0.5f;
 float treeAngle = 0.0f;
 
 //행렬 선언
-
-
-
-
-
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 glm::mat4 projection = glm::mat4(1.0f);
 glm::mat4 view = glm::mat4(1.0f);
@@ -67,6 +63,7 @@ Bottom b;
 Tree1 t1;
 Tree2 t2;
 Pot p;
+
 void main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
@@ -91,6 +88,9 @@ void main(int argc, char** argv)
 	//-----사용자 함수--------
 	make_fruitpos();
 	//--------------------
+
+	//로케이션 정보
+	flagLocation = glGetUniformLocation(s_program, "flag");
 	vColorLocation = glGetUniformLocation(s_program, "in_Color");
 	projectionLocation = glGetUniformLocation(s_program, "projectionTransform");
 	modelLocation = glGetUniformLocation(s_program, "modelTransform");
@@ -138,19 +138,16 @@ GLvoid drawScene()
 	glm::mat4 cameraRevolve(1.0f);
 	cameraRevolve = glm::rotate(cameraRevolve, (float)glm::radians(cam_revolve), glm::vec3(0.0f, 1.0f, 0.0f));
 	view = cameraRotate*lookAt(cameraPos, cameraDirection, cameraUp)*cameraRevolve;
-	projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 50.0f);
+	projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 80.0f);
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
 	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
 	
 	
 	glUseProgram(s_program);
 	glEnable(GL_DEPTH_TEST);
+	glUniform1i(flagLocation, 0);
 	//--------------------바닥
-	S = glm::scale(S, glm:: vec3(0.5, 0.5, 0.5));
-	STR = S;
-	modelLocation = glGetUniformLocation(s_program, "modelTransform");
-	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(STR));
-	b.Draw();
+	b.Draw(modelLocation);
 	//----------------------
 
 
@@ -249,11 +246,8 @@ GLvoid drawScene()
 
 
 	//------------------------------------------------솥
-	T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0 , 1.0, 2.0 ));
-	S = scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05));
-	STR4 = T * S;
-	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(STR4));
-	p.Draw();
+	glUniform1i(flagLocation, 1);
+	p.Draw(modelLocation,vColorLocation);
 
 
 	glutSwapBuffers();

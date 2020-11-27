@@ -8,6 +8,7 @@ void Tree1::Init(const GLuint s_program)
 
 void Tree1::Draw()
 {
+
 	glBindVertexArray(vao);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
