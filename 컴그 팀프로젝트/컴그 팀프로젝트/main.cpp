@@ -13,6 +13,8 @@ GLvoid Reshape(int w, int h);
 void Timerfunction(int value);
 void MouseInput(int button, int state, int x, int y);
 
+
+
 //opengl 기본변수
 GLuint s_program;
 GLuint shaderID;
@@ -137,7 +139,7 @@ GLvoid drawScene()
 	glm::mat4 STR3 = glm::mat4(1.0f);
 	glm::mat4 STR4 = glm::mat4(1.0f);
 
-	
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	glm::vec3 cameraPos = glm::vec3(CamPosX, CamPosY, CamPosZ);
 	glm::vec3 cameraDirection = glm::vec3(CamXAt, CamYAt, CamZAt);
@@ -290,6 +292,7 @@ void Timerfunction(int value)
 		}
 	}
 
+	pm.Act();
 	
 	glutTimerFunc(10, Timerfunction, 1);
 	glutPostRedisplay();
@@ -312,7 +315,7 @@ void make_fruitpos()
 			fch *= -1;
 		}
 		fruit_zpos[i] = -10.0 + fch;
-		fruit_xpos[i] =fch+i/10;
+		fruit_xpos[i] = fch+i/10;
 		fruit_ypos[i] = 9.0f;
 	}
 }

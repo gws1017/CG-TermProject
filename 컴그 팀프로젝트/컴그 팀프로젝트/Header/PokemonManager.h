@@ -15,4 +15,7 @@ public:
 
 	void Draw(const unsigned int modelLocation);
 
+	void Act();
+
+	void Position(Pokemon* p);
 };

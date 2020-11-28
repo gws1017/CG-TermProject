@@ -8,6 +8,7 @@
 #include <time.h>
 #include <windows.h>
 #include <vector>
+#include <random>
 using namespace std;
 //외부헤더
 
