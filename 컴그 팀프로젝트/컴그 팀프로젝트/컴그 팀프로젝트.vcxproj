@@ -148,6 +148,7 @@
     <ClInclude Include="Header\Init.h" />
     <ClInclude Include="Header\KeyBoard.h" />
     <ClInclude Include="Header\Pokemon.h" />
+    <ClInclude Include="Header\PokemonManager.h" />
     <ClInclude Include="Header\Pot.h" />
     <ClInclude Include="Header\ReadObj.h" />
     <ClInclude Include="Header\ShaderManager.h" />
@@ -162,6 +163,7 @@
     <ClCompile Include="KeyBoard.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pokemon.cpp" />
+    <ClCompile Include="PokemonManager.cpp" />
     <ClCompile Include="Pot.cpp" />
     <ClCompile Include="ShaderManger.cpp" />
     <ClCompile Include="Tree1.cpp" />

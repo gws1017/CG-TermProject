@@ -10,9 +10,13 @@
 }
  Pokemon::~Pokemon()
  {
-	 delete Filename;
-	 delete Texturename;
-	 delete name;
+	 Filename = NULL;
+	 Texturename = NULL;
+	 name = NULL;
+
+	 delete[] Filename;
+	 delete[] Texturename;
+	 delete[] name;
  }
 
 void Pokemon::Init(const GLuint s_program)

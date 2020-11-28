@@ -5,6 +5,7 @@
 #include "Header/Pot.h"
 #include "Header/KeyBoard.h"
 #include "Header/Pokemon.h"
+#include "Header/PokemonManager.h"
 
 //opengl 쉐이더및 콜백함수
 GLvoid drawScene(GLvoid);
@@ -69,7 +70,7 @@ Tree1 t1;
 Tree2 t2;
 Pot p;
 
-Pokemon pt("picachu");
+Pokemon_Manager pm;
 
 void main(int argc, char** argv)
 {
@@ -91,7 +92,6 @@ void main(int argc, char** argv)
 	t1.Init(s_program);
 	t2.Init(s_program);
 	p.Init(s_program);
-	pt.Init(s_program);
 	//-------------------
 
 	//-----사용자 함수--------
@@ -252,8 +252,8 @@ GLvoid drawScene()
 
 	}
 	//--------------------------------------------------
-
-	pt.Draw(modelLocation);
+	
+	pm.Draw(modelLocation);
 
 	//------------------------------------------------솥
 	glUniform1i(flagLocation, 0);
