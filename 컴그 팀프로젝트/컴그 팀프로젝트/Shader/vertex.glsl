@@ -21,6 +21,7 @@ void main()
 {
 	gl_Position =  projectionTransform * viewTransform * modelTransform * vec4(in_Position.x,in_Position.y,in_Position.z,1.0);
 	ex_Color = in_Color;
+
 	FragPos = vec3(modelTransform*vec4(in_Position,1.0));
 	Normal = in_Normal;
 	uv = in_uv;

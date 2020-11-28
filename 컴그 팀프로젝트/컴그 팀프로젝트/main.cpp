@@ -10,7 +10,12 @@
 GLvoid drawScene(GLvoid);
 GLvoid Reshape(int w, int h);
 void Timerfunction(int value);
+
+//-------마우스함수---------
 void MouseInput(int button, int state, int x, int y);
+void Convert_ScreenToClipSpace(int* pInX, int* pInY,
+	float* pOutX, float* pOutY);
+//--------------------------
 
 //opengl 기본변수
 GLuint s_program;
@@ -30,8 +35,8 @@ unsigned int lightColorLocation;
 
 //카메라 변수
 float CamPosX = 0.0f;
-float CamPosY = 1.5f;
-float CamPosZ = 5.0f;
+float CamPosY = 22.5f;
+float CamPosZ =21.0f;
 
 float CamXAt = 0.0f;
 float CamYAt = 0.0f;
@@ -39,23 +44,43 @@ float CamZAt = 0.0f;
 
 float cam_rotate = 0.0;
 float cam_revolve = 0.0;
+float cam_tvec = 0.05;
+void make_pot_cam(); //카메라가 어디에 있든 어디있든 솥으로 가게 해줌 
+
+
 
 //타이머 변수
 bool fruitTimer = false;
 bool treeTimer = false;
 bool potswingTimer = false;
+bool bMakePoketmon = false;// 솥 조합 시스템 체크
+bool bCheckColor = false;//컬러체크 끝내고 멈추기 위한 변수
+//열매 떨어질때
 
-//열매
-void make_fruitpos();
+void Init_fruit();// 열매 랜덤 위치만드는 함수
 
 GLUquadricObj* qobj;
-int fruit_xpos[20] = { 0, };
-float fruit_ypos[20] = { 0.0f, };
-int fruit_zpos[20] = { 0, };
-
-float treeVec = 0.5f;
-
+float fruit_xpos[FRUIT_MAX] = { -1.5f,-1.0f, 0.5f,1.3f,1.6 };
+float fruit_ypos[FRUIT_MAX] = { 0.0f, };
+float fruit_zpos[FRUIT_MAX] = { -9.0f,-8.5f,-8.3f,-8.7f,-8.0f };
+float treeVec = 0.05f;
 float treeAngle = 0.0f;
+//------------------------------
+
+//----열매 조합------------------
+
+CType color; // 열거형 클래스 색깔지정 0:없음 ,1:빨깡 ,2:초록 , 3:파랑
+float Red = 0.0f;
+float Green = 0.0f;
+float Blue = 0.0f;
+bool RDraw=false; //넣을때와 뺄때를 구분해주는 변수
+int CheckCount = 0; //생성하는 구 인덱스 카운트
+int RedCount = 0;   //컬러의개수를 받아주기위한 변수
+int GreenCount = 0;	//컬러의개수를 받아주기위한 변수
+int BlueCount = 0;	//컬러의개수를 받아주기위한 변수
+void check_color();//컬러 카운트를 체크해주는 함수로 배열을 한번 돌아서 몇개의 컬러가 들어갔는지 체크 
+//------------------------------
+
 
 //행렬 선언
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -68,7 +93,7 @@ Bottom b;
 Tree1 t1;
 Tree2 t2;
 Pot p;
-
+Fruit SysFruit[9]; //조합용 열매 객체
 Pokemon pt("picachu");
 
 void main(int argc, char** argv)
@@ -95,7 +120,8 @@ void main(int argc, char** argv)
 	//-------------------
 
 	//-----사용자 함수--------
-	make_fruitpos();
+	Init_fruit();
+	
 	//--------------------
 
 	//로케이션 정보
@@ -111,7 +137,7 @@ void main(int argc, char** argv)
 	glutDisplayFunc(drawScene);
 	glutReshapeFunc(Reshape);
 	glutKeyboardFunc(Keyboard);
-	
+	glutMouseFunc(MouseInput);
 	glutTimerFunc(100, Timerfunction, 1);
 
 	glutMainLoop();
@@ -205,14 +231,17 @@ GLvoid drawScene()
 	t1.Draw();
 	
 	//------------열매
-	for (int i = 0; i < 20; ++i)
+	for (int i = 0; i < FRUIT_MAX; ++i)
 	{
 		
 		T = glm::translate(glm::mat4(1.0f), glm::vec3((float)fruit_xpos[i], fruit_ypos[i], (float)fruit_zpos[i]));
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(T));
-		
+		glColor3f(1.0f, 0.0f, 0.0f);
 		gluSphere(qobj, 0.2, 20, 20);
 	}
+
+	
+
 	//-------------------------------옆에 나무들
 
 	for (int i = 1; i < 23; ++i)
@@ -251,7 +280,13 @@ GLvoid drawScene()
 			t2.Draw();
 
 	}
+
+
 	//--------------------------------------------------
+
+
+
+	
 
 	pt.Draw(modelLocation);
 
@@ -259,7 +294,41 @@ GLvoid drawScene()
 	glUniform1i(flagLocation, 0);
 	p.Draw(modelLocation,vColorLocation);
 	
-	
+	//--------------------열매 조합
+
+	if (bMakePoketmon)
+	{
+		if (RDraw)
+		{
+			//키보드 변수에서 받아온 값을 넣어줌
+			SysFruit[CheckCount-1].bDraw = true;
+			SysFruit[CheckCount-1].r = Red;
+			SysFruit[CheckCount-1].g = Green;
+			SysFruit[CheckCount-1].b = Blue;
+			SysFruit[CheckCount - 1].color = color;
+		}
+		else
+		{
+			//뺄때는 RDraw를 false로 만들고 rkqtdmf sjgdjwna
+			SysFruit[CheckCount].bDraw = false;
+			SysFruit[CheckCount].r = Red;
+			SysFruit[CheckCount].g = Green;
+			SysFruit[CheckCount].b = Blue;
+			SysFruit[CheckCount].color = color;
+		}
+		for (int i = 0; i < 9; ++i)
+		{
+
+			T = glm::translate(glm::mat4(1.0f), glm::vec3(SysFruit[i].x, SysFruit[i].y, SysFruit[i].z));
+			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(T));
+			glColor3f(SysFruit[i].r, SysFruit[i].g, SysFruit[i].b);
+			if (SysFruit[i].bDraw)//객체내의 불변수가 참이면 그린다
+				gluSphere(qobj, 0.2, 20, 20);
+
+		}
+		
+	}
+	//--------------------------------------
 	glutSwapBuffers();
 }
 
@@ -267,7 +336,9 @@ GLvoid drawScene()
 
 void Timerfunction(int value)
 {
-	if (potswingTimer) p.Swing();
+	
+	
+	
 
 	if (treeTimer)
 	{
@@ -280,16 +351,31 @@ void Timerfunction(int value)
 
 	if (fruitTimer)
 	{
-		for (int i = 0; i < 20; ++i)
+		
+		for (int i = 0; i < FRUIT_MAX; ++i)
 		{
-			fruit_ypos[i] -= (rand() % 10 + 1) * 0.1;
-			if (fruit_ypos[i] <= 1.0f)
+			fruit_ypos[i] -= (rand() % 10 + 1) * 0.01;
+			if (fruit_ypos[i] <= 1.5f)
 			{
-				fruit_ypos[i] = 9.0f;
+				fruit_ypos[i] = 1.5f;
 			}
 		}
+		
+		
 	}
 
+	if (bMakePoketmon)
+	{
+		make_pot_cam();
+		
+	}
+	else
+	{
+		if (bCheckColor)
+			check_color();
+		if(potswingTimer)
+			p.Swing();
+	}
 	
 	glutTimerFunc(10, Timerfunction, 1);
 	glutPostRedisplay();
@@ -301,18 +387,150 @@ GLvoid Reshape(int w, int h)
 	glViewport(0, 0, w, h);
 }
 
-void make_fruitpos()
+void Init_fruit()
 {
 	srand((unsigned int)time(NULL));
-	for (int i = 0; i < 20; ++i)
+	for (int i = 0; i < FRUIT_MAX; ++i)
 	{
-		float fch = (rand() % 10 + 1) / 10+1;
+		float fch = (rand() % 10 + 1) / 100+1;//위치 랜덤화 변수(앞뒤 양옆)
 		if (i % 2 == 0)
 		{
 			fch *= -1;
 		}
-		fruit_zpos[i] = -10.0 + fch;
-		fruit_xpos[i] =fch+i/10;
+		//fruit_zpos[i] = -10.0 + fch;
+		//fruit_xpos[i] =fch+i/10;
 		fruit_ypos[i] = 9.0f;
 	}
+	
+	for (int i = 0; i < 3; ++i)
+	{
+		SysFruit[i].x = -0.65f + (i * 0.65);
+		SysFruit[i].y = 3.4f;
+		SysFruit[i].z = 1.3f;
+
+		SysFruit[i+3].x = -0.65f + (i * 0.65);
+		SysFruit[i+3].y = 3.4f;
+		SysFruit[i+3].z = 1.95f ;
+
+		SysFruit[i + 6].x = -0.65f + (i * 0.65);
+		SysFruit[i + 6].y = 3.4f;
+		SysFruit[i + 6].z =  2.6;
+	}
+
+	
+}
+
+// 일정 범위에서 누를 시 열매 줍기
+void MouseInput(int button, int state, int x, int y)
+{
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+	{
+	
+		float fOutX;
+		float fOutY;
+		Convert_ScreenToClipSpace(&x, &y, &fOutX, &fOutY);
+		cout << fOutX << "|" << fOutY << endl;
+		
+			for (int i = 0; i < FRUIT_MAX; ++i)
+			{
+				fruit_ypos[i] = 9.0f;
+
+			}
+		//누르면 올라가게만듬
+		//좌표 충돌은 무리가 있으므로 키보드로 전환하거나 냅둔다.
+	}
+}
+
+void Convert_ScreenToClipSpace(int* pInX, int* pInY, //스크린좌표->오픈지엘 좌표
+	float* pOutX, float* pOutY)//스크린 공간 마우스 좌표를 오픈지엘 좌표계로 바꿔주는 함수
+{
+	*pOutX = (*pInX - WIDTH / 2) * 2.f / WIDTH;
+	*pOutY = (HEIGHT / 2 - *pInY) * 2.f / HEIGHT;
+}
+
+//카메라가 어디에 있든 어디있든 솥으로 가게 해줌 
+void make_pot_cam()  
+{
+	if (CamYAt < 0)
+	{
+		CamYAt += cam_tvec;
+		if (CamYAt >= -3.0f)
+		{
+			CamYAt = -3.0f;
+		}
+	}
+	if (CamYAt >= 0)
+	{
+		CamYAt -= cam_tvec;
+		if (CamYAt <= -3.0f)
+		{
+			CamYAt = -3.0f;
+		}
+	}
+
+	if (CamZAt < 0)
+	{
+		CamZAt += cam_tvec;
+		if (CamZAt >= -3.0f)
+		{
+			CamZAt = -3.0f;
+		}
+	}
+	if (CamZAt >= 0)
+	{
+		CamZAt -= cam_tvec;
+		if (CamZAt <= -3.0f)
+		{
+			CamZAt = -3.0f;
+		}
+	}
+
+	if (CamPosY < 0)
+	{
+		CamPosY += cam_tvec;
+		if (CamPosY >= 9.0f)
+		{
+			CamPosY = 9.0f;
+		}
+	}
+	if (CamPosY >= 0)
+	{
+		CamPosY -= cam_tvec;
+		if (CamPosY <= 9.0f)
+		{
+			CamPosY = 9.0f;
+		}
+	}
+	if (CamPosZ < 0)
+	{
+		CamPosZ += cam_tvec;
+		if (CamPosZ >= 6.0f)
+		{
+			CamPosZ = 6.0f;
+		}
+	}
+	if (CamPosZ >= 0)
+	{
+		CamPosZ -= cam_tvec;
+		if (CamPosZ <= 6.0f)
+		{
+			CamPosZ = 6.0f;
+		}
+	}
+}
+
+void check_color()
+{
+	//객체가 가지고 있는 열거형에 따라서 카운트를 세준다.
+	for (int i = 0; i < SYSTEM_FRUIT_MAX; ++i)
+	{
+		if (SysFruit[i].color == CType::RED)
+			++RedCount;
+		else if (SysFruit[i].color == CType::GREEN)
+			++GreenCount;
+		else if (SysFruit[i].color == CType::BLUE)
+			++BlueCount;
+	}
+	cout << RedCount<<"|" << GreenCount<<"|" << BlueCount << endl; //체크용
+	bCheckColor = false;//카운트 끝나고는 멈춰준다.
 }
