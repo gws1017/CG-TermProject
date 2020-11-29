@@ -1,6 +1,10 @@
 #include "Header/Pot.h"
 #include "Header/Function.h"
+#include "Header/Camera.h"
+#include "Header/PokemonManager.h"
 
+extern Camera cm;
+extern Pokemon_Manager pm;
 void Pot::Init(const GLuint s_program) //각종 초기화는 여기서 합시다(변하지 않는 변수만)
 {
 	InitBuffer(vao, vbo, ebo, s_program, "Resource/potB.obj", vPosData, vNormalData, vTextureCoordinateData, indexData, vertexCount, indexCount);
@@ -14,25 +18,50 @@ void Pot::Init(const GLuint s_program) //각종 초기화는 여기서 합시다(변하지 않는
 	
 }
 
-void Pot::Swing() //스윙 애니메이션 함수
+int Pot::Get_potcount() { return PotCount; }
+
+void Pot::Swing(int r, int g, int b, GLuint s_program) //스윙 애니메이션 함수
 {
-	if (SWRa >= 20.0f || SWRa <= -20.0f) delta_SW *= -1;
-	
-	if (SWRa == 0.0f)
+	if (potswingTimer)
 	{
-		SWT = glm::mat4(1.0f);
-		SWT2 = glm::mat4(1.0f);
+		PotCount += 1;
+
+		if (PotCount >= 100)
+		{
+			PotCount = 0;
+			cm.CamPosY = 7.0f;
+			cm.CamPosZ = 2.6f;
+			cm.CamYAt = 3.0f;
+			cm.CamZAt = -6.5f;
+			potswingTimer = false;
+
+			SWT = glm::mat4(1.0f);
+			SWT2 = glm::mat4(1.0f);
+			SWR = glm::mat4(1.0f);
+			SWRa = 0.0f;
+			pm.Create(r,g,b, s_program);
+			return;
+		}
+
+		if (SWRa >= 20.0f || SWRa <= -20.0f) delta_SW *= -1;
+
+		if (SWRa == 0.0f)
+		{
+			SWT = glm::mat4(1.0f);
+			SWT2 = glm::mat4(1.0f);
+
+			SWT = glm::translate(SWT, glm::vec3(delta_SW * PHEIGHT, 0.0f, 0.0f));
+			SWT2 = glm::translate(SWT2, glm::vec3(-delta_SW * PHEIGHT, 0.0f, 0.0f));
+		}
+
+		SWRa += delta_SW * SPEED;
+
+		SWR = glm::mat4(1.0f);
+
+		SWR = glm::rotate(SWR, glm::radians(SWRa), glm::vec3(0.0f, 0.0f, 1.0f));
+
 		
-		SWT = glm::translate(SWT, glm::vec3(delta_SW * PHEIGHT, 0.0f, 0.0f));
-		SWT2 = glm::translate(SWT2, glm::vec3(-delta_SW * PHEIGHT, 0.0f, 0.0f));
 	}
-
-	SWRa += delta_SW * SPEED;
-
-	SWR = glm::mat4(1.0f);
-
-	SWR = glm::rotate(SWR, glm::radians(SWRa), glm::vec3(0.0f, 0.0f, 1.0f));
-	
 	
 }
 

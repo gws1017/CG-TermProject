@@ -20,6 +20,8 @@ class Pot
 
 	float SWRa = 0.0f; // 스윙각도 변수
 	int delta_SWT = 1, delta_SW = 1; // 스윙변화량 제어 변수
+	int PotCount = 0;
+	
 
 	//변환행렬
 	glm::mat4 SW = glm::mat4(1.0f);   //냄비 흔들림 행렬
@@ -33,8 +35,12 @@ class Pot
 
 public:
 
+	bool potswingTimer = false;
+
+	int Get_potcount();
+
 	void Init(const GLuint s_program);
-	void Swing(); // 솥이 흔들리는 애니메이션
+	void Swing(int r, int g, int b, GLuint s_program); // 솥이 흔들리는 애니메이션
 	void Draw(const unsigned int modelLocation, const unsigned int vColorLocation);
 };
 

@@ -6,7 +6,10 @@
 #include "Header/KeyBoard.h"
 #include "Header/PokemonManager.h"
 #include "Header/Sound.h"
-#include"Header/Fruit.h"
+#include "Header/Fruit.h"
+#include "Header//background.h"
+#include "Header/Camera.h"
+
 //opengl 쉐이더및 콜백함수
 GLvoid drawScene(GLvoid);
 GLvoid Reshape(int w, int h);
@@ -35,30 +38,20 @@ unsigned int lightPosLocation;
 unsigned int lightColorLocation;
 
 //카메라 변수
-float CamPosX = 0.0f;
-float CamPosY = 0.5f;
-float CamPosZ =10.0f;
 
-float CamXAt = 0.0f;
-float CamYAt = 0.0f;
-float CamZAt = 0.5f;
-
-float cam_rotate = 0.0;
-float cam_revolve = 0.0;
-float cam_tvec = 0.05;
-void make_pot_cam(); //카메라가 어디에 있든 어디있든 솥으로 가게 해줌 
+//카메라가 어디에 있든 어디있든 솥으로 가게 해줌 
 
 
 
 //타이머 변수
 bool fruitTimer = false;
 bool treeTimer = false;
-bool potswingTimer = false;
+//bool potswingTimer = false;
 bool bMakePoketmon = false;// 솥 조합 시스템 체크
 bool bCheckColor = false;//컬러체크 끝내고 멈추기 위한 변수
 //열매 떨어질때--------------------------------------------
 void Init_fruit();// 열매 랜덤 위치만드는 함수
-GLUquadricObj* qobj;
+GLUquadric* qobj;
 float fruit_xpos[FRUIT_MAX] = { -1.5f,-1.0f, 0.5f,1.3f,1.6 };
 float fruit_ypos[FRUIT_MAX] = { 0.0f, };
 float fruit_zpos[FRUIT_MAX] = { -9.0f,-8.5f,-8.3f,-8.7f,-8.0f };
@@ -73,15 +66,15 @@ int CheckCount = 0; //생성하는 구 인덱스 카운트
 int RedCount = 0;   //컬러의개수를 받아주기위한 변수
 int GreenCount = 0;	//컬러의개수를 받아주기위한 변수
 int BlueCount = 0;	//컬러의개수를 받아주기위한 변수
-int PotCount = 0;
+//int PotCount = 0;
 void check_color();//컬러 카운트를 체크해주는 함수로 배열을 한번 돌아서 몇개의 컬러가 들어갔는지 체크 
 //------------------------------
 
 
 //행렬 선언
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
 glm::mat4 projection = glm::mat4(1.0f);
-glm::mat4 view = glm::mat4(1.0f);
+
 
 
 //객체 선언
@@ -93,6 +86,8 @@ Fruit SysFruit[SYSTEM_FRUIT_MAX]; //조합용 열매 객체
 
 Pokemon_Manager pm;
 Sound sound;
+Background bg;
+Camera cm;
 
 void main(int argc, char** argv)
 {
@@ -114,9 +109,14 @@ void main(int argc, char** argv)
 	t1.Init(s_program);
 	t2.Init(s_program);
 	p.Init(s_program);
+	//사운드
 	sound.Init_Sound();
+	//배경
+	bg.Init(s_program);
+	cm.Init();
+	
 	//-------------------
-
+	qobj = gluNewQuadric();
 	//-----사용자 함수--------
 	Init_fruit();
 	
@@ -139,7 +139,7 @@ void main(int argc, char** argv)
 	glutReshapeFunc(Reshape);
 	glutKeyboardFunc(Keyboard);
 	glutMouseFunc(MouseInput);
-	glutTimerFunc(100, Timerfunction, 1);
+	glutTimerFunc(10, Timerfunction, 1);
 
 	glutMainLoop();
 
@@ -152,27 +152,24 @@ GLvoid drawScene()
 	
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	qobj = gluNewQuadric();
+	
 	
 	glm::mat4 T = glm::mat4(1.0f);
 	
-	glm::vec3 cameraPos = glm::vec3(CamPosX, CamPosY, CamPosZ);
-	glm::vec3 cameraDirection = glm::vec3(CamXAt, CamYAt, CamZAt);
+	cm.Update(viewLocation);
 
-	glm::mat4 cameraRotate(1.0f);
-	cameraRotate = glm::rotate(cameraRotate, (float)glm::radians(cam_rotate), glm::vec3(0.0f, 1.0f, 0.0f));
-
-	glm::mat4 cameraRevolve(1.0f);
-	cameraRevolve = glm::rotate(cameraRevolve, (float)glm::radians(cam_revolve), glm::vec3(0.0f, 1.0f, 0.0f));
-	view = cameraRotate*lookAt(cameraPos, cameraDirection, cameraUp)*cameraRevolve;
-	projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 80.0f);
-	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
-	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
+	projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
 	
+	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
 	
 	glUseProgram(s_program);
 	glEnable(GL_DEPTH_TEST);
 	glUniform1i(flagLocation, 0);
+
+	// 배경그려줌
+
+	bg.Draw(modelLocation);
+
 	//--------------------바닥
 	b.Draw(modelLocation);
 	//----------------------
@@ -193,17 +190,18 @@ GLvoid drawScene()
 	t1.DrawBigTree(modelLocation);
 	
 	//------------열매
+	glUniform1i(flagLocation, 1);
 	for (int i = 0; i < FRUIT_MAX; ++i)
 	{
-		
+	
 		T = glm::translate(glm::mat4(1.0f), glm::vec3((float)fruit_xpos[i], fruit_ypos[i], (float)fruit_zpos[i]));
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(T));
-		glColor3f(1.0f, 0.0f, 0.0f);
+		
+		glUniform3f(vColorLocation,1.0f, 0.0f, 0.0f);
 		gluSphere(qobj, 0.2, 20, 20);
 	}
-
 	
-
+	glUniform1i(flagLocation, 0);
 	//-------------------------------옆에 나무들
 
 	for (int i = 1; i < 23; ++i)
@@ -227,8 +225,6 @@ GLvoid drawScene()
 	}
 
 	//--------------------------------------------------
-
-
 	pm.Draw(modelLocation);
 
 	//------------------------------------------------솥
@@ -250,7 +246,8 @@ GLvoid drawScene()
 		}
 		for (int i = 0; i < 9; ++i)
 		{
-			SysFruit[i].Draw(modelLocation,qobj);
+			glUniform1i(flagLocation, 1);
+			SysFruit[i].Draw(modelLocation,vColorLocation);
 		}
 		
 	}
@@ -276,37 +273,27 @@ void Timerfunction(int value)
 				fruit_ypos[i] = 1.5f;
 			}
 		}
-		
-		
 	}
 
 	if (bMakePoketmon)
-		make_pot_cam();
+		cm.make_pot_cam();
 	else
 	{
 		if (bCheckColor)
 			check_color();
+		p.Swing(RedCount,GreenCount,BlueCount,s_program);
 		
-		if (potswingTimer)
-		{
-			
-			if (PotCount <= 100)
-			{
-				++PotCount;
-				p.Swing();
-			}
-			else
-			{
-				CamPosY = 7.0f;
-				CamPosZ = 2.6f;
-				CamYAt = 3.0f;
-				CamZAt = -6.5f;
-				potswingTimer = false;
-			}
-		}
-
 	}
+
 	pm.Act();
+
+	if (pm.Position_timer) pm.Position_Count += 1;
+	if (pm.Position_Count >= 100)
+	{
+		pm.Position();
+		pm.Position_Count = 0;
+		pm.Position_timer = false;
+	}
 	glutTimerFunc(10, Timerfunction, 1);
 	glutPostRedisplay();
 }
@@ -371,83 +358,10 @@ void MouseInput(int button, int state, int x, int y)
 	}
 }
 
-void Convert_ScreenToClipSpace(int* pInX, int* pInY, //스크린좌표->오픈지엘 좌표
-	float* pOutX, float* pOutY)//스크린 공간 마우스 좌표를 오픈지엘 좌표계로 바꿔주는 함수
-{
-	*pOutX = (*pInX - WIDTH / 2) * 2.f / WIDTH;
-	*pOutY = (HEIGHT / 2 - *pInY) * 2.f / HEIGHT;
-}
+
 
 //카메라가 어디에 있든 어디있든 솥으로 가게 해줌 
-void make_pot_cam()  
-{
-	if (CamYAt < 0)
-	{
-		CamYAt += cam_tvec;
-		if (CamYAt >= -3.0f)
-		{
-			CamYAt = -3.0f;
-		}
-	}
-	if (CamYAt >= 0)
-	{
-		CamYAt -= cam_tvec;
-		if (CamYAt <= -3.0f)
-		{
-			CamYAt = -3.0f;
-		}
-	}
 
-	if (CamZAt < 0)
-	{
-		CamZAt += cam_tvec;
-		if (CamZAt >= -3.0f)
-		{
-			CamZAt = -3.0f;
-		}
-	}
-	if (CamZAt >= 0)
-	{
-		CamZAt -= cam_tvec;
-		if (CamZAt <= -3.0f)
-		{
-			CamZAt = -3.0f;
-		}
-	}
-
-	if (CamPosY < 0)
-	{
-		CamPosY += cam_tvec;
-		if (CamPosY >= 9.0f)
-		{
-			CamPosY = 9.0f;
-		}
-	}
-	if (CamPosY >= 0)
-	{
-		CamPosY -= cam_tvec;
-		if (CamPosY <= 9.0f)
-		{
-			CamPosY = 9.0f;
-		}
-	}
-	if (CamPosZ < 0)
-	{
-		CamPosZ += cam_tvec;
-		if (CamPosZ >= 6.0f)
-		{
-			CamPosZ = 6.0f;
-		}
-	}
-	if (CamPosZ >= 0)
-	{
-		CamPosZ -= cam_tvec;
-		if (CamPosZ <= 6.0f)
-		{
-			CamPosZ = 6.0f;
-		}
-	}
-}
 
 void check_color()
 {

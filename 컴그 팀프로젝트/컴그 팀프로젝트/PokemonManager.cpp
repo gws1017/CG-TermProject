@@ -13,33 +13,46 @@ Pokemon_Manager::~Pokemon_Manager()
 
 }
 
-void Pokemon_Manager::Create(const char* name ,GLuint s_program)
+void Pokemon_Manager::Create(int r, int g, int b, GLuint s_program)
 {
-	Pokemon p(name);
-	p.Init(s_program);
-	Position(&p);
-	vpm.push_back(p);
+	
 	FMOD_Channel_Stop(sound.Channel[1]);
+	Position_timer = true;
 
 	//울음소리 재생
-	if (strcmp(name, "balchang") == 0)
+	if (b == 9)
 	{
+		Pokemon p("balchang");
+		p.Init(s_program);
+		vpm.push_back(p);
 		FMOD_System_PlaySound(sound.soundSystem, sound.effectSound[4], NULL, 0, &sound.Channel[1]);
 	}
-	else if (strcmp(name, "picachu") == 0)
+	else if (r == 6 && g == 3)
 	{
+		Pokemon p("picachu");
+		p.Init(s_program);
+		vpm.push_back(p);
 		FMOD_System_PlaySound(sound.soundSystem, sound.effectSound[0], NULL, 0, &sound.Channel[1]);
 	}
-	else if (strcmp(name, "pang") == 0)
+	else if (g == 9)
 	{
+		Pokemon p("pang");
+		p.Init(s_program);
+		vpm.push_back(p);
 		FMOD_System_PlaySound(sound.soundSystem, sound.effectSound[1], NULL, 0, &sound.Channel[1]);
 	}
-	else if (strcmp(name, "gong") == 0)
+	else if (r == 7 && g == 1 && b == 1)
 	{
+		Pokemon p("gong");
+		p.Init(s_program);
+		vpm.push_back(p);
 		FMOD_System_PlaySound(sound.soundSystem, sound.effectSound[2], NULL, 0, &sound.Channel[1]);
 	}
-	else if (strcmp(name, "coil") == 0)
+	else if (r == 3 && g == 3 && b == 3)
 	{
+		Pokemon p("coil");
+		p.Init(s_program);
+		vpm.push_back(p);
 		FMOD_System_PlaySound(sound.soundSystem, sound.effectSound[3], NULL, 0, &sound.Channel[1]);
 	}
 }
@@ -91,8 +104,10 @@ void Pokemon_Manager::Act()
 
 }
 
-void Pokemon_Manager::Position(Pokemon* p)
+void Pokemon_Manager::Position()
 {
+	Pokemon* p = &vpm.back();
+
 	uniform_int_distribution<int> uidX(-100, 100), uidZ(5, 100);
 	random_device rd;
 	mt19937 mt(rd());

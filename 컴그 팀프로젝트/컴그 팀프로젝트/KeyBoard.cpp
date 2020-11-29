@@ -1,24 +1,16 @@
 #include "Header/KeyBoard.h"
 #include "Header/PokemonManager.h"
-#include"Header/Fruit.h"
-
+#include "Header/Fruit.h"
+#include "Header/Camera.h"
+#include "Header/Pot.h"
 
 extern GLuint s_program;
 
-extern float CamPosX;
-extern float CamPosY;
-extern float CamPosZ;
-
-extern float CamXAt;
-extern float CamYAt;
-extern float CamZAt;
-
-extern float cam_rotate;
-extern float cam_revolve;
+extern unsigned int viewLocation;
+extern Camera cm;
 
 extern bool fruitTimer;
 extern bool treeTimer;
-extern bool potswingTimer;
 extern bool bMakePoketmon;
 
 extern float treeAngle;
@@ -31,77 +23,60 @@ extern bool RDraw;
 extern bool bCheckColor;
 extern CType color;
 
+extern Pot p;
 extern Pokemon_Manager pm;
 void Keyboard(unsigned char key, int x, int y)
 {
     //디버깅용 메세지
     cout << endl;
-    cout /*<< "CamX" << CamPosX << " " */ << "CamY " << CamPosY << " " << "CamZ " << CamPosZ << " " << endl;
-    cout/* << "CamAtX" << CamAtX << " " */ << "CamATY " << CamYAt << " " << "CamATZ " << CamZAt << " " << endl;
-    cout /*<< "CamX" << CamPosX << " " */ << "CamRotate " << cam_rotate << " " << "CamRevolve " << cam_revolve << " " << endl;
+    cout /*<< "CamX" << CamPosX << " " */ << "CamY " << cm.CamPosY << " " << "CamZ " << cm.CamPosZ << " " << endl;
+    cout/* << "CamAtX" << CamAtX << " " */ << "CamATY " << cm.CamYAt << " " << "CamATZ " << cm.CamZAt << " " << endl;
+    cout /*<< "CamX" << CamPosX << " " */ << "CamRotate " << cm.cam_rotate << " " << "CamRevolve " << cm.cam_revolve << " " << endl;
     cout << CheckCount << endl;
 
     cout << endl;
     switch (key)
     {
-    case '5':
-        pm.Create("balchang", s_program);
-        break;
-    case '6':
-        pm.Create("picachu", s_program);
-        break;
-    case '7':
-        pm.Create("gong", s_program);
-        break;
-    case '8':
-        pm.Create("pang", s_program);
-        break;
-    case '9':
-        pm.Create("coil", s_program);
-        break;
-    case 'p':
-        potswingTimer = !potswingTimer;
-        break;
     case 'm':
         treeTimer = !treeTimer;
         fruitTimer = !fruitTimer;
         //treeAngle = 0.0f;
         break;
     case 'e'://위
-        CamYAt += 0.5;
-        CamPosY += 0.5;
+        cm.CamYAt += 0.5;
+        cm.CamPosY += 0.5;
         break;
     case 'E'://아래
-        CamYAt -= 0.5;
-        CamPosY -= 0.5;
+        cm.CamYAt -= 0.5;
+        cm.CamPosY -= 0.5;
         break;
     case 's'://뒤
-        CamZAt += 0.5;
-        CamPosZ += 0.5;
+        cm.CamZAt += 0.5;
+        cm.CamPosZ += 0.5;
         break;
     case 'w'://앞
-        CamZAt -= 0.5;
-        CamPosZ -= 0.5;
+        cm.CamZAt -= 0.5;
+        cm.CamPosZ -= 0.5;
         break;
     case'a'://왼
-        CamXAt -= 0.5;
-        CamPosX -= 0.5;
+        cm.CamXAt -= 0.5;
+        cm.CamPosX -= 0.5;
         break;
     case'd'://오
-        CamXAt += 0.5;
-        CamPosX += 0.5;
+        cm.CamXAt += 0.5;
+        cm.CamPosX += 0.5;
         break;
     case 'y':
-        cam_rotate += 10.0;
+        cm.cam_rotate += 10.0;
         break;
     case 'Y':
-        cam_rotate -= 10.0;
+        cm.cam_rotate -= 10.0;
         break;
     case 'r':
-        cam_revolve += 10.0;
+        cm.cam_revolve += 10.0;
         break;
     case 'R':
-        cam_revolve -= 10.0;
+        cm.cam_revolve -= 10.0;
         break;
     case'+':
         bMakePoketmon = true;//솥 조합시스템 시작
@@ -170,19 +145,19 @@ void Keyboard(unsigned char key, int x, int y)
     case'o'://열매 배치 확정키
         if (CheckCount >= 8)
         {
-            CamPosY = 3.5f;
-            CamPosZ = 16.0f;
-            CamYAt = 3.0f;
-            CamZAt = 6.5f;
+            cm.CamPosY = 3.5f;
+            cm.CamPosZ = 16.0f;
+            cm.CamYAt = 3.0f;
+            cm.CamZAt = 6.5f;
             bMakePoketmon = false;
-            potswingTimer = !potswingTimer;
+            p.potswingTimer = !p.potswingTimer;
             bCheckColor = true;
         }
         break;
 
     }
 
-   
+    
 
     glutPostRedisplay();
 }

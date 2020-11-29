@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClInclude Include="Header\background.h" />
     <ClInclude Include="Header\Bottom.h" />
+    <ClInclude Include="Header\Camera.h" />
     <ClInclude Include="Header\Fruit.h" />
     <ClInclude Include="Header\Function.h" />
     <ClInclude Include="Header\header.h" />
@@ -165,6 +166,7 @@
   <ItemGroup>
     <ClCompile Include="background.cpp" />
     <ClCompile Include="Bottom.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Fruit.cpp" />
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="Init.cpp" />

@@ -16,3 +16,9 @@ void MakeFileName(char*& Filename, const int& Namelen,char*& name, const char* F
 	strcat(Filename, extension);
 }
 
+void Convert_ScreenToClipSpace(int* pInX, int* pInY, //½ºÅ©¸°ÁÂÇ¥->¿ÀÇÂÁö¿¤ ÁÂÇ¥
+	float* pOutX, float* pOutY)//½ºÅ©¸° °ø°£ ¸¶¿ì½º ÁÂÇ¥¸¦ ¿ÀÇÂÁö¿¤ ÁÂÇ¥°è·Î ¹Ù²ãÁÖ´Â ÇÔ¼ö
+{
+	*pOutX = (*pInX - WIDTH / 2) * 2.f / WIDTH;
+	*pOutY = (HEIGHT / 2 - *pInY) * 2.f / HEIGHT;
+}
