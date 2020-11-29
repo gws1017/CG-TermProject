@@ -1,6 +1,7 @@
 #include "Header/Function.h"
 
 
+
 float NCV(float value)
 {
 	return value / 255.0f;
@@ -14,3 +15,4 @@ void MakeFileName(char*& Filename, const int& Namelen,char*& name, const char* F
 	strcat(Filename, name);
 	strcat(Filename, extension);
 }
+
