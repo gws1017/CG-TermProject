@@ -6,7 +6,7 @@
 #include "Header/KeyBoard.h"
 #include "Header/PokemonManager.h"
 #include "Header/Sound.h"
-
+#include"Header/Fruit.h"
 //opengl 쉐이더및 콜백함수
 GLvoid drawScene(GLvoid);
 GLvoid Reshape(int w, int h);
@@ -36,12 +36,12 @@ unsigned int lightColorLocation;
 
 //카메라 변수
 float CamPosX = 0.0f;
-float CamPosY = 22.5f;
-float CamPosZ =21.0f;
+float CamPosY = 0.5f;
+float CamPosZ =10.0f;
 
 float CamXAt = 0.0f;
 float CamYAt = 0.0f;
-float CamZAt = 0.0f;
+float CamZAt = 0.5f;
 
 float cam_rotate = 0.0;
 float cam_revolve = 0.0;
@@ -56,20 +56,14 @@ bool treeTimer = false;
 bool potswingTimer = false;
 bool bMakePoketmon = false;// 솥 조합 시스템 체크
 bool bCheckColor = false;//컬러체크 끝내고 멈추기 위한 변수
-//열매 떨어질때
-
+//열매 떨어질때--------------------------------------------
 void Init_fruit();// 열매 랜덤 위치만드는 함수
-
 GLUquadricObj* qobj;
 float fruit_xpos[FRUIT_MAX] = { -1.5f,-1.0f, 0.5f,1.3f,1.6 };
 float fruit_ypos[FRUIT_MAX] = { 0.0f, };
 float fruit_zpos[FRUIT_MAX] = { -9.0f,-8.5f,-8.3f,-8.7f,-8.0f };
-float treeVec = 0.05f;
-float treeAngle = 0.0f;
-//------------------------------
 
 //----열매 조합------------------
-
 CType color; // 열거형 클래스 색깔지정 0:없음 ,1:빨깡 ,2:초록 , 3:파랑
 float Red = 0.0f;
 float Green = 0.0f;
@@ -79,6 +73,7 @@ int CheckCount = 0; //생성하는 구 인덱스 카운트
 int RedCount = 0;   //컬러의개수를 받아주기위한 변수
 int GreenCount = 0;	//컬러의개수를 받아주기위한 변수
 int BlueCount = 0;	//컬러의개수를 받아주기위한 변수
+int PotCount = 0;
 void check_color();//컬러 카운트를 체크해주는 함수로 배열을 한번 돌아서 몇개의 컬러가 들어갔는지 체크 
 //------------------------------
 
@@ -94,7 +89,7 @@ Bottom b;
 Tree1 t1;
 Tree2 t2;
 Pot p;
-Fruit SysFruit[9]; //조합용 열매 객체
+Fruit SysFruit[SYSTEM_FRUIT_MAX]; //조합용 열매 객체
 
 Pokemon_Manager pm;
 Sound sound;
@@ -158,19 +153,9 @@ GLvoid drawScene()
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	qobj = gluNewQuadric();
-	glm::mat4 S = glm::mat4(1.0f);
-	glm::mat4 T = glm::mat4(1.0f);
-	glm::mat4 Rx = glm::mat4(1.0f);
-	glm::mat4 Ry = glm::mat4(1.0f);
-	glm::mat4 Rz = glm::mat4(1.0f);
-	glm::mat4 STR = glm::mat4(1.0f);
-	glm::mat4 STR1 = glm::mat4(1.0f);
-	glm::mat4 STR2 = glm::mat4(1.0f);
-	glm::mat4 STR3 = glm::mat4(1.0f);
-	glm::mat4 STR4 = glm::mat4(1.0f);
-
 	
-
+	glm::mat4 T = glm::mat4(1.0f);
+	
 	glm::vec3 cameraPos = glm::vec3(CamPosX, CamPosY, CamPosZ);
 	glm::vec3 cameraDirection = glm::vec3(CamXAt, CamYAt, CamZAt);
 
@@ -192,49 +177,20 @@ GLvoid drawScene()
 	b.Draw(modelLocation);
 	//----------------------
 
-
-
 	//---------------------뒤에 나무들
 	for (int i = 2; i < 12; ++i)
 	{
-		int chp ;
-		if (i % 2 == 0)
-			chp = -1;
-		else
-			chp =1;
-		T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0 - i, 2.0, -9.0+(chp)));
-		S = scale(glm::mat4(1.0f), glm::vec3(0.01 , 0.01*((2+chp)),  0.01));
-		STR1 = T*S;
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(STR1));
+	
+		t1.DrawBackTree(modelLocation,i);
+		t1.DrawBackTree(modelLocation, -i);
 		
-			t1.Draw();
-		
-	}
-	for (int i = 2; i < 12; ++i)
-	{
-		int chp;//앞뒤 간격 및 높낮이 조정
-		if (i % 2 == 0)
-			chp = -1;
-		else
-			chp = 1;
-		T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0 + i, 2.0, -9.0 + (chp)));
-		S = scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01 * ((2 + chp)), 0.01));
-		STR1 = T * S;
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(STR1));
-
-		t1.Draw();
-
 	}
 	//----------------------------------------
 
 
 	//-------------------제일 큰나무
-	T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0 , 6.0, -10.0 ));
-	S = scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05 , 0.05));
-	Rz = glm::rotate(glm::mat4(1.0f), glm::radians(treeAngle), glm::vec3(0.0f, 0.0f, 1.0f));
-	STR2 = T*Rz * S;
-	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(STR2));
-	t1.Draw();
+	
+	t1.DrawBigTree(modelLocation);
 	
 	//------------열매
 	for (int i = 0; i < FRUIT_MAX; ++i)
@@ -257,49 +213,27 @@ GLvoid drawScene()
 			chp = -0.7;
 		else
 			chp = 0.7;
-		T = glm::translate(glm::mat4(1.0f), glm::vec3(-11.0+(chp), 1.3, -10.0+i));
-		S = scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01));
-		STR3 = T * S;
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(STR3));
-		if (i % 2 == 0)
-			t1.Draw();
-		else
-			t2.Draw();
-
-	}
-
-	for (int i = 1; i < 23; ++i)
-	{
-		float chp;
-		if (i % 2 == 0)
-			chp = -0.7;
-		else
-			chp = 0.7;
-		T = glm::translate(glm::mat4(1.0f), glm::vec3(11.0 - (chp), 1.3, -10.0 + i));
-		S = scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01));
 		
-		STR3 = T * S;
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(STR3));
 		if (i % 2 == 0)
-			t1.Draw();
+		{
+			t1.DrawSideTree(modelLocation, chp, i, -11.0);
+			t1.DrawSideTree(modelLocation, -chp, i, 11.0);
+		}
 		else
-			t2.Draw();
-
+		{
+			t2.DrawSideTree(modelLocation,chp,i,-11.0);
+			t2.DrawSideTree(modelLocation, -chp, i, 11.0);
+		}
 	}
-
 
 	//--------------------------------------------------
 
-
-
-	
 
 	pm.Draw(modelLocation);
 
 	//------------------------------------------------솥
 	glUniform1i(flagLocation, 0);
 	p.Draw(modelLocation,vColorLocation);
-	
 	//--------------------열매 조합
 
 	if (bMakePoketmon)
@@ -307,34 +241,20 @@ GLvoid drawScene()
 		if (RDraw)
 		{
 			//키보드 변수에서 받아온 값을 넣어줌
-			SysFruit[CheckCount-1].bDraw = true;
-			SysFruit[CheckCount-1].r = Red;
-			SysFruit[CheckCount-1].g = Green;
-			SysFruit[CheckCount-1].b = Blue;
-			SysFruit[CheckCount - 1].color = color;
+			SysFruit[CheckCount-1].Create(RDraw,Red,Green, Blue, color);
 		}
 		else
 		{
 			//뺄때는 RDraw를 false로 만들고 rkqtdmf sjgdjwna
-			SysFruit[CheckCount].bDraw = false;
-			SysFruit[CheckCount].r = Red;
-			SysFruit[CheckCount].g = Green;
-			SysFruit[CheckCount].b = Blue;
-			SysFruit[CheckCount].color = color;
+			SysFruit[CheckCount].Remove(false);
 		}
 		for (int i = 0; i < 9; ++i)
 		{
-
-			T = glm::translate(glm::mat4(1.0f), glm::vec3(SysFruit[i].x, SysFruit[i].y, SysFruit[i].z));
-			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(T));
-			glColor3f(SysFruit[i].r, SysFruit[i].g, SysFruit[i].b);
-			if (SysFruit[i].bDraw)//객체내의 불변수가 참이면 그린다
-				gluSphere(qobj, 0.2, 20, 20);
-
+			SysFruit[i].Draw(modelLocation,qobj);
 		}
 		
 	}
-	//--------------------------------------
+	
 	glutSwapBuffers();
 }
 
@@ -343,18 +263,8 @@ GLvoid drawScene()
 void Timerfunction(int value)
 {
 	
-	
-	
-
 	if (treeTimer)
-	{
-		treeAngle += treeVec;
-		if (treeAngle > 5.0)
-			treeVec *= -1;
-		if (treeAngle < -5.0)
-			treeVec *= -1;
-	}
-
+		t1.Swing();
 	if (fruitTimer)
 	{
 		
@@ -371,16 +281,30 @@ void Timerfunction(int value)
 	}
 
 	if (bMakePoketmon)
-	{
 		make_pot_cam();
-		
-	}
 	else
 	{
 		if (bCheckColor)
 			check_color();
-		if(potswingTimer)
-			p.Swing();
+		
+		if (potswingTimer)
+		{
+			
+			if (PotCount <= 100)
+			{
+				++PotCount;
+				p.Swing();
+			}
+			else
+			{
+				CamPosY = 7.0f;
+				CamPosZ = 2.6f;
+				CamYAt = 3.0f;
+				CamZAt = -6.5f;
+				potswingTimer = false;
+			}
+		}
+
 	}
 	pm.Act();
 	glutTimerFunc(10, Timerfunction, 1);

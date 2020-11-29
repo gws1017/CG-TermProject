@@ -1,6 +1,7 @@
 #include "Header/KeyBoard.h"
 #include "Header/PokemonManager.h"
-struct Fruit;
+#include"Header/Fruit.h"
+
 
 extern GLuint s_program;
 
@@ -64,23 +65,31 @@ void Keyboard(unsigned char key, int x, int y)
     case 'm':
         treeTimer = !treeTimer;
         fruitTimer = !fruitTimer;
-        treeAngle = 0.0f;
+        //treeAngle = 0.0f;
         break;
-    case 'c':
+    case 'e'://위
         CamYAt += 0.5;
         CamPosY += 0.5;
         break;
-    case 'C':
+    case 'E'://아래
         CamYAt -= 0.5;
         CamPosY -= 0.5;
         break;
-    case 'z':
+    case 's'://뒤
         CamZAt += 0.5;
         CamPosZ += 0.5;
         break;
-    case 'Z':
+    case 'w'://앞
         CamZAt -= 0.5;
         CamPosZ -= 0.5;
+        break;
+    case'a'://왼
+        CamXAt -= 0.5;
+        CamPosX -= 0.5;
+        break;
+    case'd'://오
+        CamXAt += 0.5;
+        CamPosX += 0.5;
         break;
     case 'y':
         cam_rotate += 10.0;
@@ -161,6 +170,10 @@ void Keyboard(unsigned char key, int x, int y)
     case'o'://열매 배치 확정키
         if (CheckCount >= 8)
         {
+            CamPosY = 3.5f;
+            CamPosZ = 16.0f;
+            CamYAt = 3.0f;
+            CamZAt = 6.5f;
             bMakePoketmon = false;
             potswingTimer = !potswingTimer;
             bCheckColor = true;

@@ -29,20 +29,5 @@ using namespace std;
 #define HEIGHT 1000  //윈도우 세로
 #define STB_IMAGE_IMPLEMENTATION
 #define FRUIT_MAX 5
-#define SYSTEM_FRUIT_MAX 9
 
-enum class CType //색깔 타입
-{
-	NONE,
-	RED,
-	GREEN,
-	BLUE
-};
 
-struct Fruit
-{
-	float x, y, z;
-	float r, g, b;
-	bool bDraw = false; // 그렸는지 안그렸는지 체크
-	CType color;
-};
