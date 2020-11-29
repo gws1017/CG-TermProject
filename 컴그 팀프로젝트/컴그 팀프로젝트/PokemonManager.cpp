@@ -1,5 +1,8 @@
 #include "Header/PokemonManager.h"
 #include "Header/Pokemon.h"
+#include "Header/Sound.h"
+
+extern Sound sound;
 
 Pokemon_Manager::Pokemon_Manager()
 {
@@ -16,6 +19,29 @@ void Pokemon_Manager::Create(const char* name ,GLuint s_program)
 	p.Init(s_program);
 	Position(&p);
 	vpm.push_back(p);
+	FMOD_Channel_Stop(sound.Channel[1]);
+
+	//울음소리 재생
+	if (strcmp(name, "balchang") == 0)
+	{
+		FMOD_System_PlaySound(sound.soundSystem, sound.effectSound[4], NULL, 0, &sound.Channel[1]);
+	}
+	else if (strcmp(name, "picachu") == 0)
+	{
+		FMOD_System_PlaySound(sound.soundSystem, sound.effectSound[0], NULL, 0, &sound.Channel[1]);
+	}
+	else if (strcmp(name, "pang") == 0)
+	{
+		FMOD_System_PlaySound(sound.soundSystem, sound.effectSound[1], NULL, 0, &sound.Channel[1]);
+	}
+	else if (strcmp(name, "gong") == 0)
+	{
+		FMOD_System_PlaySound(sound.soundSystem, sound.effectSound[2], NULL, 0, &sound.Channel[1]);
+	}
+	else if (strcmp(name, "coil") == 0)
+	{
+		FMOD_System_PlaySound(sound.soundSystem, sound.effectSound[3], NULL, 0, &sound.Channel[1]);
+	}
 }
 
 

@@ -2,6 +2,7 @@
 #include "header.h"
 
 
+
 class Pokemon_Manager {
  
 	vector<class Pokemon> vpm;

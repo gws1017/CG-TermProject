@@ -6,7 +6,7 @@
 #include "Header/KeyBoard.h"
 #include "Header/Pokemon.h"
 #include "Header/PokemonManager.h"
-
+#include "Header/Sound.h"
 //opengl 쉐이더및 콜백함수
 GLvoid drawScene(GLvoid);
 GLvoid Reshape(int w, int h);
@@ -73,7 +73,7 @@ Tree2 t2;
 Pot p;
 
 Pokemon_Manager pm;
-
+Sound sound;
 void main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
@@ -94,6 +94,7 @@ void main(int argc, char** argv)
 	t1.Init(s_program);
 	t2.Init(s_program);
 	p.Init(s_program);
+	sound.Init_Sound();
 	//-------------------
 
 	//-----사용자 함수--------
@@ -109,6 +110,9 @@ void main(int argc, char** argv)
 	viewposLocation = glGetUniformLocation(s_program, "viewPos");
 	lightPosLocation = glGetUniformLocation(s_program, "lightPos");
 	lightColorLocation = glGetUniformLocation(s_program, "lightColor");
+
+	//사운드재생
+	FMOD_System_PlaySound(sound.soundSystem, sound.bgmSound[0], NULL, 0, &sound.Channel[0]);
 
 	glutDisplayFunc(drawScene);
 	glutReshapeFunc(Reshape);

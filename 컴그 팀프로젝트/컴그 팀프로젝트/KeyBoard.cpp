@@ -1,6 +1,5 @@
 #include "Header/KeyBoard.h"
 #include "Header/PokemonManager.h"
-
 extern GLuint s_program;
 
 extern float CamPosX;

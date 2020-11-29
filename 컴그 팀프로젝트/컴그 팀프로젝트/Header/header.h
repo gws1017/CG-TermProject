@@ -9,6 +9,7 @@
 #include <windows.h>
 #include <vector>
 #include <random>
+#include <fmod.h>
 using namespace std;
 //외부헤더
 
