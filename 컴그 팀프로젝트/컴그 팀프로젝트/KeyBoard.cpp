@@ -1,5 +1,9 @@
 #include "Header/KeyBoard.h"
+#include "Header/PokemonManager.h"
 struct Fruit;
+
+extern GLuint s_program;
+
 extern float CamPosX;
 extern float CamPosY;
 extern float CamPosZ;
@@ -25,6 +29,8 @@ extern bool RDraw;
 
 extern bool bCheckColor;
 extern CType color;
+
+extern Pokemon_Manager pm;
 void Keyboard(unsigned char key, int x, int y)
 {
     //디버깅용 메세지
@@ -37,6 +43,21 @@ void Keyboard(unsigned char key, int x, int y)
     cout << endl;
     switch (key)
     {
+    case '5':
+        pm.Create("balchang", s_program);
+        break;
+    case '6':
+        pm.Create("picachu", s_program);
+        break;
+    case '7':
+        pm.Create("gong", s_program);
+        break;
+    case '8':
+        pm.Create("pang", s_program);
+        break;
+    case '9':
+        pm.Create("coil", s_program);
+        break;
     case 'p':
         potswingTimer = !potswingTimer;
         break;

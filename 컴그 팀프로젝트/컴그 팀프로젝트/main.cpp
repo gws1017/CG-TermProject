@@ -4,7 +4,8 @@
 #include "Header/Tree2.h"
 #include "Header/Pot.h"
 #include "Header/KeyBoard.h"
-#include "Header/Pokemon.h"
+#include "Header/PokemonManager.h"
+#include "Header/Sound.h"
 
 //opengl 쉐이더및 콜백함수
 GLvoid drawScene(GLvoid);
@@ -94,7 +95,9 @@ Tree1 t1;
 Tree2 t2;
 Pot p;
 Fruit SysFruit[9]; //조합용 열매 객체
-Pokemon pt("picachu");
+
+Pokemon_Manager pm;
+Sound sound;
 
 void main(int argc, char** argv)
 {
@@ -116,7 +119,7 @@ void main(int argc, char** argv)
 	t1.Init(s_program);
 	t2.Init(s_program);
 	p.Init(s_program);
-	pt.Init(s_program);
+	sound.Init_Sound();
 	//-------------------
 
 	//-----사용자 함수--------
@@ -133,6 +136,9 @@ void main(int argc, char** argv)
 	viewposLocation = glGetUniformLocation(s_program, "viewPos");
 	lightPosLocation = glGetUniformLocation(s_program, "lightPos");
 	lightColorLocation = glGetUniformLocation(s_program, "lightColor");
+
+	//배경음재생
+	FMOD_System_PlaySound(sound.soundSystem, sound.bgmSound[0], NULL, 0, &sound.Channel[0]);
 
 	glutDisplayFunc(drawScene);
 	glutReshapeFunc(Reshape);
@@ -288,7 +294,7 @@ GLvoid drawScene()
 
 	
 
-	pt.Draw(modelLocation);
+	pm.Draw(modelLocation);
 
 	//------------------------------------------------솥
 	glUniform1i(flagLocation, 0);
@@ -376,7 +382,7 @@ void Timerfunction(int value)
 		if(potswingTimer)
 			p.Swing();
 	}
-	
+	pm.Act();
 	glutTimerFunc(10, Timerfunction, 1);
 	glutPostRedisplay();
 }
