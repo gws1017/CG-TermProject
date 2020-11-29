@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Header\background.h" />
     <ClInclude Include="Header\Bottom.h" />
     <ClInclude Include="Header\Fruit.h" />
     <ClInclude Include="Header\Function.h" />
@@ -162,6 +163,7 @@
     <ClInclude Include="Header\Tree2.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="background.cpp" />
     <ClCompile Include="Bottom.cpp" />
     <ClCompile Include="Fruit.cpp" />
     <ClCompile Include="Function.cpp" />
