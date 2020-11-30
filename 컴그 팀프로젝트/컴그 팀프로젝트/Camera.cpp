@@ -37,6 +37,23 @@ void Camera::make_pot_cam()
 		}
 	}
 
+	if (CamXAt < 0)
+	{
+		CamXAt += cam_tvec;
+		if (CamXAt >= 0.0f)
+		{
+			CamXAt = 0.0f;
+		}
+	}
+	if (CamXAt >= 0)
+	{
+		CamXAt -= cam_tvec;
+		if (CamXAt <= 0.0f)
+		{
+			CamXAt = 0.0f;
+		}
+	}
+
 	if (CamZAt < 0)
 	{
 		CamZAt += cam_tvec;
@@ -70,6 +87,24 @@ void Camera::make_pot_cam()
 			CamPosY = 9.0f;
 		}
 	}
+
+	if (CamPosX < 0)
+	{
+		CamPosX += cam_tvec;
+		if (CamPosX >= 0.0f)
+		{
+			CamPosX= 0.0f;
+		}
+	}
+	if (CamPosX >= 0)
+	{
+		CamPosX -= cam_tvec;
+		if (CamPosX <= 0.0f)
+		{
+			CamPosX =0.0f;
+		}
+	}
+
 	if (CamPosZ < 0)
 	{
 		CamPosZ += cam_tvec;
@@ -86,4 +121,18 @@ void Camera::make_pot_cam()
 			CamPosZ = 6.0f;
 		}
 	}
+}
+
+void Camera::make_Overview()
+{
+	 CamPosX = 0.0f;
+	 CamPosY = 23.0f;
+	 CamPosZ = 23.5f;
+
+	 CamXAt = 0.0f;
+	 CamYAt = 0.5f;
+	 CamZAt = -1.0f;
+
+	 cam_rotate = 0.0;
+	 cam_revolve = 0.0;
 }

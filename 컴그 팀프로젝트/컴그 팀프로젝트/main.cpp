@@ -42,13 +42,17 @@ unsigned int lightColorLocation;
 //카메라가 어디에 있든 어디있든 솥으로 가게 해줌 
 
 
-
+float cam_dist;//원점과 카메라의 거리
 //타이머 변수
 bool fruitTimer = false;
 bool treeTimer = false;
 //bool potswingTimer = false;
 bool bMakePoketmon = false;// 솥 조합 시스템 체크
 bool bCheckColor = false;//컬러체크 끝내고 멈추기 위한 변수
+bool bReset = false;
+bool all_timer = false;//전체뷰로 바귀기 전까지 움직이지 않기 위해 체크
+void make_dist(float x, float y,float z);//거리계산함수
+
 //열매 떨어질때--------------------------------------------
 void Init_fruit();// 열매 랜덤 위치만드는 함수
 GLUquadric* qobj;
@@ -67,7 +71,8 @@ int RedCount = 0;   //컬러의개수를 받아주기위한 변수
 int GreenCount = 0;	//컬러의개수를 받아주기위한 변수
 int BlueCount = 0;	//컬러의개수를 받아주기위한 변수
 //int PotCount = 0;
-void check_color();//컬러 카운트를 체크해주는 함수로 배열을 한번 돌아서 몇개의 컬러가 들어갔는지 체크 
+void check_color();//컬러 카운트를 체크해주는 함수로 배열을 한번 돌아서 몇개의 컬러가 들어갔는지 체크
+void reset();//요리만들고 초기화하기 위한함수
 //------------------------------
 
 
@@ -131,7 +136,7 @@ void main(int argc, char** argv)
 	viewposLocation = glGetUniformLocation(s_program, "viewPos");
 	lightPosLocation = glGetUniformLocation(s_program, "lightPos");
 	lightColorLocation = glGetUniformLocation(s_program, "lightColor");
-
+	
 	//배경음재생
 	FMOD_System_PlaySound(sound.soundSystem, sound.bgmSound[0], NULL, 0, &sound.Channel[0]);
 
@@ -259,6 +264,7 @@ GLvoid drawScene()
 
 void Timerfunction(int value)
 {
+	make_dist(cm.CamPosX, cm.CamPosY, cm.CamPosZ);
 	
 	if (treeTimer)
 		t1.Swing();
@@ -274,26 +280,44 @@ void Timerfunction(int value)
 			}
 		}
 	}
+	if (all_timer)
+	{
+		if (bMakePoketmon)
+		{
+			if (bReset)
+			{
+				reset();
+				bReset = false;
+			}
+			cm.make_pot_cam();
+		}
+		else
+		{
+			if (bCheckColor)
+			{
+				check_color();
+				bCheckColor = false;
+			}
+			else
+				p.Swing(RedCount, GreenCount, BlueCount, s_program);
 
-	if (bMakePoketmon)
-		cm.make_pot_cam();
+		}
+
+		pm.Act();
+
+		if (pm.Position_timer) pm.Position_Count += 1;
+
+		if (pm.Position_Count >= 100)
+		{
+			pm.Position();
+			pm.Position_Count = 0;
+			pm.Position_timer = false;
+			cm.make_Overview();
+			all_timer = false;
+		}
+	}
 	else
-	{
-		if (bCheckColor)
-			check_color();
-		p.Swing(RedCount,GreenCount,BlueCount,s_program);
-		
-	}
-
 	pm.Act();
-
-	if (pm.Position_timer) pm.Position_Count += 1;
-	if (pm.Position_Count >= 100)
-	{
-		pm.Position();
-		pm.Position_Count = 0;
-		pm.Position_timer = false;
-	}
 	glutTimerFunc(10, Timerfunction, 1);
 	glutPostRedisplay();
 }
@@ -376,5 +400,28 @@ void check_color()
 			++BlueCount;
 	}
 	cout << RedCount<<"|" << GreenCount<<"|" << BlueCount << endl; //체크용
-	bCheckColor = false;//카운트 끝나고는 멈춰준다.
+	
+}
+
+void reset()
+{
+	for (int i = 0; i < 9; ++i)
+	{
+		bool r = false;
+		SysFruit[i].Remove(r);
+	}
+	RedCount = 0;
+	GreenCount = 0;
+	BlueCount = 0;
+	CheckCount = 0;
+	color = CType::NONE;
+	Red = 0.0f;
+	Green = 0.0f;
+	Blue = 0.0f;
+	
+}
+
+void make_dist(float x, float y, float z)
+{
+	cam_dist = sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
 }
