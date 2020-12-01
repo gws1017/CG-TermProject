@@ -28,6 +28,10 @@ extern CType color;
 
 extern Pot p;
 extern Pokemon_Manager pm;
+
+float tempZAt=-1.0f,tempZPos=23.5f; //상한선을 넘었을때 이전좌표를 넣어주기 위한 변수
+float tempXAt=0.0f, tempXPos=0.0f;
+float tempYAt = 0.5f, tempYPos = 23.0f;
 void Keyboard(unsigned char key, int x, int y)
 {
     //디버깅용 메세지
@@ -51,76 +55,137 @@ void Keyboard(unsigned char key, int x, int y)
         //treeAngle = 0.0f;
         break;
     case 'e'://위
-        if (all_timer == false && cam_dist <=35.0f)
+        if (cam_dist < 34.0f)
         {
+            if (cam_dist <= 33.5f)
+            {
+                tempYAt = cm.CamYAt; //좌표를 더해주기전 좌표를 넣어놓는다.
+                tempYPos = cm.CamPosY;
+            }
             cm.CamYAt += 0.5;
             cm.CamPosY += 0.5;
+
         }
-        else if (all_timer == false && cam_dist > 35.0f)//원점과의 거리가 35보다크면 나가지 않도록한다.
+        if (cam_dist >= 34.f)//만약 좌표가 상한선을넘으면
         {
-            cm.CamYAt -= 0.6;
-            cm.CamPosY -= 0.6;
+            cm.CamYAt = tempYAt; //이전에 받아놓았던 좌표를 받아준다.
+            cm.CamPosY = tempYPos;
         }
         break;
     case 'E'://아래
-        if (all_timer == false && cam_dist <=35.0f)
+        if (all_timer == false)
         {
-            cm.CamYAt -= 0.5;
-            cm.CamPosY -= 0.5;
-        }
-        else if (all_timer == false && cam_dist > 35.0f)
-        {
-            cm.CamYAt += 0.6;
-            cm.CamPosY += 0.6;
+            
+            if (cam_dist < 34.0f)
+            {
+                if (cam_dist <= 33.5f)
+                {
+                    tempYAt = cm.CamYAt;
+                    tempYPos = cm.CamPosY;
+                }
+                cm.CamYAt -= 0.5;
+                cm.CamPosY -= 0.5;
+
+            }
+            if (cam_dist >= 34.f)
+            {
+                cm.CamYAt = tempYAt;
+                cm.CamPosY = tempYPos;
+            }
         }
         break;
     case 's'://뒤
-        if (all_timer == false && cam_dist <=35.0f)
+        if (all_timer == false )
         {
-            cm.CamZAt += 0.5;
-            cm.CamPosZ += 0.5;
+            
+            if (cam_dist < 34.0f)
+            {
+                if (cam_dist <= 33.5f)
+                {
+                    tempZAt = cm.CamZAt;
+                    tempZPos = cm.CamPosZ;
+                }
+                cm.CamZAt += 0.5;
+                cm.CamPosZ += 0.5;
+               
+            }
+            if (cam_dist >=34.f)
+            {
+                cm.CamZAt= tempZAt;
+                cm.CamPosZ= tempZPos;
+            }
         }
-        else if (all_timer == false && cam_dist > 35.0f)
-        {
-            cm.CamZAt -= 0.6;
-            cm.CamPosZ -= 0.6;
-        }
+        
         break;
     case 'w'://앞
-        if (all_timer == false && cam_dist <=35.0f)
+        
+        if (all_timer == false)
         {
-            cm.CamZAt -= 0.6;
-            cm.CamPosZ -= 0.6;
-        }
-        else if (all_timer == false && cam_dist > 35.0f)
-        {
-            cm.CamZAt+= 0.6;
-            cm.CamPosZ += 0.6;
-        }
+            
+            if (cam_dist < 34.0f)
+            {
+                if (cam_dist <= 33.5f)
+                {
+                    tempZAt = cm.CamZAt;
+                    tempZPos = cm.CamPosZ;
+                }
+                cm.CamZAt -= 0.5;
+                cm.CamPosZ -= 0.5;
 
+            }
+            if (cam_dist >= 34.f)
+            {
+                cm.CamZAt = tempZAt;
+                cm.CamPosZ = tempZPos;
+            }
+        }
+   
         break;
     case'a'://왼
-        if (all_timer == false && cam_dist <= 35.0f)
+        if (all_timer == false )
         {
-            cm.CamXAt -= 0.6;
-            cm.CamPosX -= 0.6;
+            
+            if (cam_dist < 34.0f)
+            {
+                if (cam_dist <= 33.5f)
+                {
+                    tempXAt = cm.CamXAt;
+                    tempXPos = cm.CamPosX;
+                }
+                cm.CamXAt -= 0.5;
+                cm.CamPosX -= 0.5;
+
+            }
+            if (cam_dist >= 34.f)
+            {
+                cm.CamXAt = tempXAt;
+                cm.CamPosX = tempXPos;
+            }
+          
         }
-        else if (all_timer == false && cam_dist > 35.0f)
-        {
-            cm.CamXAt += 0.6;
-            cm.CamPosX += 0.6;
-        }
+  
         break;
     case'd'://오
-        if (all_timer == false && cam_dist <=35.0f)
+        if (all_timer == false)
         {
-            cm.CamXAt += 0.6;
-            cm.CamPosX += 0.6;
-        }
-        else if (all_timer == false && cam_dist > 35.0f)
-        {
-            cm.CamXAt -= 0.6;
-            cm.CamPosX -= 0.6;
+            
+            if (cam_dist < 34.0f)
+            {
+                if (cam_dist <= 33.5f)
+                {
+                    tempXAt = cm.CamXAt;
+                    tempXPos = cm.CamPosX;
+                }
+                cm.CamXAt += 0.5;
+                cm.CamPosX += 0.5;
+
+            }
+            if (cam_dist >= 34.f)
+            {
+                cm.CamXAt = tempXAt;
+                cm.CamPosX = tempXPos;
+            }
+
         }
         break;
     case 'y':
