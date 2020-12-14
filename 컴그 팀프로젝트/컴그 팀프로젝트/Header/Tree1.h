@@ -14,6 +14,7 @@ class Tree1
 	int width, height, nrChannels;
 	unsigned int texture;
 
+public:
 	float treeVec = 0.05f;
 	float treeAngle = 0.0f;
 

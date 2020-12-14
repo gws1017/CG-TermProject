@@ -22,3 +22,28 @@ void Convert_ScreenToClipSpace(int* pInX, int* pInY, //½ºÅ©¸°ÁÂÇ¥->¿ÀÇÂÁö¿¤ ÁÂÇ¥
 	*pOutX = (*pInX - WIDTH / 2) * 2.f / WIDTH;
 	*pOutY = (HEIGHT / 2 - *pInY) * 2.f / HEIGHT;
 }
+
+bool Check_Combination(int r, int g, int b)
+{
+	if (b == 9)
+	{
+		return 1;
+	}
+	else if (r == 6 && g == 3)
+	{
+		return 1;
+	}
+	else if (g == 9)
+	{
+		return 1;
+	}
+	else if (r == 7 && g == 1 && b == 1)
+	{
+		return 1;
+	}
+	else if (r == 3 && g == 3 && b == 3)
+	{
+		return 1;
+	}
+	else  return 0;
+}

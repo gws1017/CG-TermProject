@@ -3,6 +3,7 @@
 #include "Header/Fruit.h"
 #include "Header/Camera.h"
 #include "Header/Pot.h"
+#include"Header/Tree1.h"
 
 extern GLuint s_program;
 
@@ -28,6 +29,7 @@ extern CType color;
 
 extern Pot p;
 extern Pokemon_Manager pm;
+extern Tree1 t1;
 
 float tempZAt=-1.0f,tempZPos=23.5f; //상한선을 넘었을때 이전좌표를 넣어주기 위한 변수
 float tempXAt=0.0f, tempXPos=0.0f;
@@ -51,6 +53,7 @@ void Keyboard(unsigned char key, int x, int y)
      
             treeTimer = !treeTimer;
             fruitTimer = !fruitTimer;
+            t1.treeAngle = 0.0f;
         }
         //treeAngle = 0.0f;
         break;
@@ -284,6 +287,7 @@ void Keyboard(unsigned char key, int x, int y)
     case'o'://열매 배치 확정키
         if (CheckCount >=8)
         {
+           
             cm.CamPosY = 3.5f;
             cm.CamPosZ = 16.0f;
             cm.CamYAt = 3.0f;

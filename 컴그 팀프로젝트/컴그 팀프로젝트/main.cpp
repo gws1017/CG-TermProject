@@ -9,7 +9,8 @@
 #include "Header/Fruit.h"
 #include "Header//background.h"
 #include "Header/Camera.h"
-
+#include"Header/Function.h"
+#include"CLight.h"
 //opengl 쉐이더및 콜백함수
 GLvoid drawScene(GLvoid);
 GLvoid Reshape(int w, int h);
@@ -34,6 +35,7 @@ unsigned int projectionLocation;
 unsigned int modelLocation;
 unsigned int viewLocation;
 unsigned int viewposLocation;
+
 unsigned int lightPosLocation;
 unsigned int lightColorLocation;
 
@@ -69,6 +71,7 @@ bool RDraw=false; //넣을때와 뺄때를 구분해주는 변수
 int CheckCount = 0; //생성하는 구 인덱스 카운트
 int RedCount = 0;   //컬러의개수를 받아주기위한 변수
 int GreenCount = 0;	//컬러의개수를 받아주기위한 변수
+float LightCount = 0;
 int BlueCount = 0;	//컬러의개수를 받아주기위한 변수
 //int PotCount = 0;
 void check_color();//컬러 카운트를 체크해주는 함수로 배열을 한번 돌아서 몇개의 컬러가 들어갔는지 체크
@@ -88,7 +91,7 @@ Tree1 t1;
 Tree2 t2;
 Pot p;
 Fruit SysFruit[SYSTEM_FRUIT_MAX]; //조합용 열매 객체
-
+CLight light;
 Pokemon_Manager pm;
 Sound sound;
 Background bg;
@@ -114,6 +117,7 @@ void main(int argc, char** argv)
 	t1.Init(s_program);
 	t2.Init(s_program);
 	p.Init(s_program);
+
 	//사운드
 	sound.Init_Sound();
 	//배경
@@ -162,7 +166,7 @@ GLvoid drawScene()
 	glm::mat4 T = glm::mat4(1.0f);
 	
 	cm.Update(viewLocation);
-
+	light.Update(lightPosLocation, lightColorLocation);
 	projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
 	
 	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
@@ -198,11 +202,16 @@ GLvoid drawScene()
 	glUniform1i(flagLocation, 1);
 	for (int i = 0; i < FRUIT_MAX; ++i)
 	{
-	
+		
+
 		T = glm::translate(glm::mat4(1.0f), glm::vec3((float)fruit_xpos[i], fruit_ypos[i], (float)fruit_zpos[i]));
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(T));
-		
+		if(i==1)
 		glUniform3f(vColorLocation,1.0f, 0.0f, 0.0f);
+		if(i>1&&i<=3)
+			glUniform3f(vColorLocation, 0.0f, 1.0f, 0.0f);
+		if(i>3)
+			glUniform3f(vColorLocation, 0.0f, 0.0f, 1.0f);
 		gluSphere(qobj, 0.2, 20, 20);
 	}
 	
@@ -265,7 +274,8 @@ GLvoid drawScene()
 void Timerfunction(int value)
 {
 	make_dist(cm.CamPosX, cm.CamPosY, cm.CamPosZ);
-	
+	LightCount += 0.5;
+	light.movelight(LightCount);
 	if (treeTimer)
 		t1.Swing();
 	if (fruitTimer)
@@ -297,6 +307,7 @@ void Timerfunction(int value)
 			{
 				check_color();
 				bCheckColor = false;
+				
 			}
 			else
 				p.Swing(RedCount, GreenCount, BlueCount, s_program);

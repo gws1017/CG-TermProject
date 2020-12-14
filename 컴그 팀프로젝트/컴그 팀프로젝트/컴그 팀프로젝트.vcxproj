@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CLight.h" />
     <ClInclude Include="Header\background.h" />
     <ClInclude Include="Header\Bottom.h" />
     <ClInclude Include="Header\Camera.h" />
@@ -167,6 +168,7 @@
     <ClCompile Include="background.cpp" />
     <ClCompile Include="Bottom.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CLight.cpp" />
     <ClCompile Include="Fruit.cpp" />
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="Init.cpp" />

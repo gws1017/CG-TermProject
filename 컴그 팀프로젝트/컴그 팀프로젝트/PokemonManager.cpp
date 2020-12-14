@@ -55,6 +55,7 @@ void Pokemon_Manager::Create(int r, int g, int b, GLuint s_program)
 		vpm.push_back(p);
 		FMOD_System_PlaySound(sound.soundSystem, sound.effectSound[3], NULL, 0, &sound.Channel[1]);
 	}
+
 }
 
 

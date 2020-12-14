@@ -16,3 +16,5 @@ void MakeFileName(char*& Filename, const int& Namelen, char*& name, const char* 
 	Filename = strcat(Filename,name);
 	Filename = strcat(Filename, extension);
 }*/
+
+bool Check_Combination(int r, int g, int b);

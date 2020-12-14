@@ -14,7 +14,7 @@ using namespace std;
 //외부헤더
 
 
-//opengl 헤더
+//양원석 헤더
 #include <gl/glew.h>
 #include <gl/freeglut.h>
 #include <gl/freeglut_ext.h>
@@ -22,6 +22,15 @@ using namespace std;
 #include <glm/ext.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+//박해성 헤더
+//#include <gl/glew.h>
+//#include <gl/freeglut.h>
+//#include <gl/freeglut_ext.h>
+//#include <glm/glm/glm.hpp>
+//#include <glm/glm/ext.hpp>
+//#include <glm/glm/gtc/matrix_transform.hpp>
+//#include <glm/glm/gtc/type_ptr.hpp>
 
 //정의
 
