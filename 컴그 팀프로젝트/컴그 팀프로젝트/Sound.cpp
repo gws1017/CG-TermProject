@@ -18,4 +18,6 @@ void Sound::Init_Sound()
 	FMOD_System_CreateSound(soundSystem, "Resource/Sound/Magnemite.wav", FMOD_DEFAULT, 0, &effectSound[3]);
 	//πﬂ√¨¿Ã
 	FMOD_System_CreateSound(soundSystem, "Resource/Sound/Poliwag.wav", FMOD_DEFAULT, 0, &effectSound[4]);
+	//∆“≈“
+	FMOD_System_CreateSound(soundSystem, "Resource/Sound/Gengar.wav", FMOD_DEFAULT, 0, &effectSound[5]);
 }

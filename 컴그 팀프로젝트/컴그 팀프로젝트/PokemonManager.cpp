@@ -34,12 +34,12 @@ void Pokemon_Manager::Create(int r, int g, int b, GLuint s_program)
 		vpm.push_back(p);
 		FMOD_System_PlaySound(sound.soundSystem, sound.effectSound[0], NULL, 0, &sound.Channel[1]);
 	}
-	else if (g == 9)
+	else if (r == 4 && b == 4 && g == 1)
 	{
-		Pokemon p("pang");
+		Pokemon p("phantom");
 		p.Init(s_program);
 		vpm.push_back(p);
-		FMOD_System_PlaySound(sound.soundSystem, sound.effectSound[1], NULL, 0, &sound.Channel[1]);
+		FMOD_System_PlaySound(sound.soundSystem, sound.effectSound[5], NULL, 0, &sound.Channel[1]);
 	}
 	else if (r == 7 && g == 1 && b == 1)
 	{
@@ -55,7 +55,12 @@ void Pokemon_Manager::Create(int r, int g, int b, GLuint s_program)
 		vpm.push_back(p);
 		FMOD_System_PlaySound(sound.soundSystem, sound.effectSound[3], NULL, 0, &sound.Channel[1]);
 	}
-
+	else {
+		Pokemon p("pang");
+		p.Init(s_program);
+		vpm.push_back(p);
+		FMOD_System_PlaySound(sound.soundSystem, sound.effectSound[1], NULL, 0, &sound.Channel[1]);
+	}
 }
 
 

@@ -9,8 +9,8 @@
 #include "Header/Fruit.h"
 #include "Header//background.h"
 #include "Header/Camera.h"
-#include"Header/Function.h"
-#include"CLight.h"
+#include "Header/Function.h"
+#include "Header/CLight.h"
 //opengl 쉐이더및 콜백함수
 GLvoid drawScene(GLvoid);
 GLvoid Reshape(int w, int h);
@@ -274,7 +274,7 @@ GLvoid drawScene()
 void Timerfunction(int value)
 {
 	make_dist(cm.CamPosX, cm.CamPosY, cm.CamPosZ);
-	LightCount += 0.5;
+	LightCount += 0.05;
 	light.movelight(LightCount);
 	if (treeTimer)
 		t1.Swing();
