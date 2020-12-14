@@ -99,6 +99,8 @@ Camera cm;
 
 void main(int argc, char** argv)
 {
+	HWND hConsole = GetConsoleWindow();
+	ShowWindow(hConsole, SW_HIDE);
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowPosition(100, 100);
@@ -307,10 +309,11 @@ void Timerfunction(int value)
 			{
 				check_color();
 				bCheckColor = false;
-				
+				CheckCount = 0;
 			}
 			else
 				p.Swing(RedCount, GreenCount, BlueCount, s_program);
+
 
 		}
 

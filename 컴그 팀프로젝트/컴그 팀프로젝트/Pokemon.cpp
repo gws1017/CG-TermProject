@@ -157,10 +157,12 @@ void Pokemon::Has_Pokemon()
 	random_device rd;
 	mt19937 mt(rd());
 
+	float size = 2.0f;
+
 	// Á¡ÇÁ Á¡ÇÁ2 ½ºÀ®
 	if (strcmp(name, "balchang") == 0)
 	{
-		S = glm::scale(S, glm::vec3(0.015f, 0.015f, 0.015f));
+		S = glm::scale(S, glm::vec3(0.015f*size, 0.015f*size, 0.015f*size));
 		R = glm::rotate(R, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		T = glm::translate(T, glm::vec3(0.0f, 1.05f, -8.0f));
 		p_height = 0.05f;
@@ -169,7 +171,7 @@ void Pokemon::Has_Pokemon()
 	// Á¡ÇÁ Á¡ÇÁ2 ½ºÀ®
 	else if (strcmp(name, "picachu") == 0)
 	{
-		S = glm::scale(S, glm::vec3(0.01f, 0.01f, 0.01f));
+		S = glm::scale(S, glm::vec3(0.01f*size, 0.01f*size, 0.01f*size));
 		R = glm::rotate(R, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		T = glm::translate(T, glm::vec3(0.0f, 1.05f, -7.0f));
 		p_height = 0.06f;
@@ -179,7 +181,7 @@ void Pokemon::Has_Pokemon()
 	// µÕµÕ
 	else if (strcmp(name, "gong") == 0)
 	{
-		S = glm::scale(S, glm::vec3(0.01f, 0.01f, 0.01f));
+		S = glm::scale(S, glm::vec3(0.01f*size, 0.01f*size, 0.01f*size));
 		R = glm::rotate(R, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		T = glm::translate(T, glm::vec3(0.0f, 1.15f, -7.0f));
 		p_height = 0.05f;
@@ -188,7 +190,7 @@ void Pokemon::Has_Pokemon()
 	// Á¡ÇÁ Á¡ÇÁ2 ½ºÀ®
 	else if (strcmp(name, "pang") == 0)
 	{
-		S = glm::scale(S, glm::vec3(0.013f, 0.013f, 0.013f));
+		S = glm::scale(S, glm::vec3(0.013f*size, 0.013f*size, 0.013f*size));
 		R = glm::rotate(R, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		T = glm::translate(T, glm::vec3(0.0f, 1.05f, -7.0f));
 		p_height = 0.1f;
@@ -198,7 +200,7 @@ void Pokemon::Has_Pokemon()
 	//µÕµÕ Åä³×ÀÌµµ È¸Àü
 	else if (strcmp(name, "coil") == 0)
 	{
-		S = glm::scale(S, glm::vec3(0.005f, 0.005f, 0.005f));
+		S = glm::scale(S, glm::vec3(0.005f*size, 0.005f*size, 0.005f*size));
 		R = glm::rotate(R, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		T = glm::translate(T, glm::vec3(0.0f, 1.3f, -7.0f));
 		p_height = 0.03f;
@@ -206,7 +208,7 @@ void Pokemon::Has_Pokemon()
 	}
 	else if (strcmp(name, "phantom") == 0)
 	{
-		S = glm::scale(S, glm::vec3(0.005f, 0.005f, 0.005f));
+		S = glm::scale(S, glm::vec3(0.005f*size, 0.005f*size, 0.005f*size));
 		R = glm::rotate(R, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		T = glm::translate(T, glm::vec3(0.0f, 1.3f, -7.0f));
 		p_height = 0.03f;

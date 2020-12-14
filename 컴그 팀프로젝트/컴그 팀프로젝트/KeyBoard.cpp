@@ -293,7 +293,7 @@ void Keyboard(unsigned char key, int x, int y)
             cm.CamYAt = 3.0f;
             cm.CamZAt = 6.5f;
             bMakePoketmon = false;
-            p.potswingTimer = !p.potswingTimer;
+            p.potswingTimer = true;
            
             bCheckColor = true;
         }
