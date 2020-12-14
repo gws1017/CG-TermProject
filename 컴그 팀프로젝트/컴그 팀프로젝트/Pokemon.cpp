@@ -204,6 +204,14 @@ void Pokemon::Has_Pokemon()
 		p_height = 0.03f;
 		Act_Type = uid2(mt);
 	}
+	else if (strcmp(name, "phantom") == 0)
+	{
+		S = glm::scale(S, glm::vec3(0.005f, 0.005f, 0.005f));
+		R = glm::rotate(R, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		T = glm::translate(T, glm::vec3(0.0f, 1.3f, -7.0f));
+		p_height = 0.03f;
+		Act_Type = 3;
+	}
 }
 
 void Pokemon::Update_Pos() {
